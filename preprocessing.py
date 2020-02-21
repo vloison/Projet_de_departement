@@ -1,4 +1,4 @@
-"""Preprocess the input data before giving it to the neural network"""
+"""Preprocesses the input data"""
 import glob
 import imageio
 import skimage
@@ -13,14 +13,14 @@ MOVIES = pd.read_csv('clean_poster_data.csv')
 
 
 def get_id(filename):
-    """Get the id from the filename"""
+    """Gets the id from the filename"""
     index_s = filename.rfind("/") + 1
     index_f = filename.rfind(".jpg")
     return int(filename[index_s:index_f])
 
 
 def show_img(dataset, posters, labels, ids, index):
-    """Show the image with id at index position in ids"""
+    """Shows the image with id at index position in ids"""
     title = dataset.at[ids[index], 'title']
     genre = dataset.at[ids[index], 'genre_1']
 #     genres = [dataset.at[id,'genre_'+i] for i in ['1','2','3']]
@@ -32,7 +32,7 @@ def show_img(dataset, posters, labels, ids, index):
 
 
 def preprocess(img, size=(150, 100, 3)):
-    """Normalize the image"""
+    """Normalizes the image"""
     img = skimage.transform.resize(img, size)
     img = img.astype(np.float32)
 #     img = (img / 127.5) -1
@@ -40,7 +40,7 @@ def preprocess(img, size=(150, 100, 3)):
 
 
 def prepare_data(path, dataset, size=(150, 100, 3), save=True):
-    """Generate the data to be used by the neural network"""
+    """Generates the data to be used by the neural network"""
     print('Generating dataset...')
     genre_list = dataset.genre_1.unique()
     nb_genres = len(genre_list)
@@ -64,6 +64,7 @@ def prepare_data(path, dataset, size=(150, 100, 3), save=True):
         np.save('numpy_posters', posters)
         np.save('numpy_genres', genres)
         np.save('numpy_ids', ids)
+    print(Done.)
     return posters, genres, ids
 
 
