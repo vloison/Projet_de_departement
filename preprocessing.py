@@ -25,7 +25,7 @@ def show_img(dataset, posters, labels, ids, index):
     genre = dataset.at[ids[index], 'genre_1']
 #     genres = [dataset.at[id,'genre_'+i] for i in ['1','2','3']]
     plt.imshow(posters[index])
-    plt.title("{} \n {}".format(title, genre))
+    plt.title('{} \n {}'.format(title, genre))
     print('Indice du film: ', ids[index])
     print('Genre conservé: ', labels[index])
     plt.show()
@@ -64,7 +64,7 @@ def prepare_data(path, dataset, size=(150, 100, 3), save=True):
         np.save('numpy_posters', posters)
         np.save('numpy_genres', genres)
         np.save('numpy_ids', ids)
-    print(Done.)
+    print('Done.')
     return posters, genres, ids
 
 
