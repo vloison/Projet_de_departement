@@ -1,7 +1,7 @@
 ## Synthèse Maxime
 Lien du github: https://github.com/davideiacobs/-Movie-Genres-Classification-from-their-Poster-Image-using-CNNs.
 
-À pour but de faire un modèle prédisant les genres d'un film à partir de son poster (comme nous, aussi dans le cadre multi-label).
+A pour but de faire un modèle prédisant les genres d'un film à partir de son poster (comme nous, aussi dans le cadre multi-label).
 Se sert de la base de données IMDB en récupérant les infos directement depuis les pages webs: plus compliqué que dans notre cas, demande plus de nettoyage de bdd aussi.
 
 J'ai repris dans les grandes lignes ce qui a été fait pour les scripts 'database.py' et 'preprocessing.py', en adaptant pour notre base de données.
