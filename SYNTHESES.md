@@ -15,7 +15,7 @@ Le notebook se divise en 5 étapes:
 
 En faisant une phase de *training* sur 4000 films, il obtient une loss (*binary cross-entropy*) de 0.39 à la fin. En faisant une prédiction sur 100 instances de test, il obtient 64% de succès.
 
-##Synthèse Alex
+## Synthèse Alex
 Article le plus vieux
 Deux approches possibles pour les pb de multilabels: CNN ou décomposer en sous-pb avec un label:
 - classe produit et pb de sparse encore plus
@@ -23,11 +23,11 @@ Deux approches possibles pour les pb de multilabels: CNN ou décomposer en sous-
 Deux versions: soit pb multilabel comme monolabel, soit pb différent: faire attention
 Considère pas l'affiche tout en entier: classification avec données bas niveau (couleur dominante, moments sur les couleurs). Scène apporte très peu: couleur suffit.
 
-##Synthèse Nicolas
+## Synthèse Nicolas
 Classifie des films à partir de leur trailer, applique un algo pour repérer les scènes, prend un plan par scène.
 Chaque scène est histogramme 1D de genre, chaque trailer est histogramme 2D. K-means entre les histogrammes avec distance du Khi2.
 
-##Synthèse Vivi
+## Synthèse Vivi
 Même article: traitement d'images, utilisent W-centrist, GIST model.
 Dernier article: pas vu trop en détails, biblio de ce qui a été fait jusqu'ici. Chacun le lit plus en détail.
 
