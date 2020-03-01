@@ -1,22 +1,25 @@
 """Downloads the posters and cleans the database"""
-import os
+from pathlib import Path
 from urllib.request import urlretrieve
 import pandas as pd
 from tqdm import tqdm  # barre de chargement
 
 
-def database_download(savelocation, dataset):
+def database_download(savelocation, dataset, nb=None):
     """Downloads the database from the given links in the dataset"""
-    if not os.path.exists(savelocation):
-        os.mkdir(savelocation)
+    path = Path(savelocation)
+    if not path.exists():
+        path.mkdir()
     not_found = []
-    posters_urls = dataset['poster'].to_list()
     print('Posters database downloading')
-    for index in tqdm(range(len(posters_urls))):
-        jpgname = savelocation+str(index)+'.jpg'
+    generator = dataset.iterrows() if nb is None else dataset.head(n=nb).iterrows()
+    length = len(dataset) if nb is None else nb
+    for index, row in tqdm(generator, total=length):
+        current_name = str(index)+'.jpg'
+        jpgname = path / current_name
         try:
-            if not os.path.isfile(jpgname):
-                urlretrieve(posters_urls[index], jpgname)
+            if not Path(jpgname).is_file():
+                urlretrieve(row.poster, Path(jpgname))
         except Exception:  # Mettre le nom de l'exception possible
             not_found.append(index)
     print('Database downloaded')
@@ -35,7 +38,8 @@ On enlève les films pas encore sortis.
 MOVIES = RAW_MOVIES.dropna(
     subset=['title', 'release_date', 'genre_1', 'poster']).drop(
         RAW_MOVIES[RAW_MOVIES['release_date'].map(pd.Timestamp) > TODAY].index)
-
+print(MOVIES.columns)
+# MOVIES.profile_report()
 
 def genre_count(movies):
     """Prints the genres (first category) and the number of appearences"""
@@ -48,12 +52,13 @@ def genre_count(movies):
         print(label, occurences)
 
 
-genre_count(MOVIES)
+# genre_count(MOVIES)
 '''
 Voir quels genres supprimer
 Choisir un échantillon d'entraînement à partir des films restants
 Pas forcément tout faire au hasard: on a un training set où certains genres
 sont bien plus représentés.
 '''
-MOVIES.to_csv('clean_poster_data.csv')
-# database_download(savelocation, movies)
+MOVIES.to_csv('clean_poster_data.csv', index=True)
+not_found = database_download(SAVELOCATION, MOVIES, nb=60)
+print(not_found)
