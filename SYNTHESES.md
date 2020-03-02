@@ -14,3 +14,20 @@ Le notebook se divise en 5 étapes:
 - La cinquième étape est la construction et l'implémentation du CNN. Il utilise keras (aujourd'hui plutôt utilisé tf.keras que keras). Les quatre premières couches sont des *Conv2D layers*, puis il y a un *Flatten layer* utilisé pour faire la connection avec les deux *Dense layers* qui suivent. L'activation pour la dernière couche est une sigmoïde car on a un problème multi-label (*The activation for the last layer is sigmoid since we are dealing with a multi-label classication problem.*).
 
 En faisant une phase de *training* sur 4000 films, il obtient une loss (*binary cross-entropy*) de 0.39 à la fin. En faisant une prédiction sur 100 instances de test, il obtient 64% de succès.
+
+## Synthèse Alex
+Article le plus vieux
+Deux approches possibles pour les pb de multilabels: CNN ou décomposer en sous-pb avec un label:
+- classe produit et pb de sparse encore plus
+- classificateur booléen pour le nb de classes que t'as
+Deux versions: soit pb multilabel comme monolabel, soit pb différent: faire attention
+Considère pas l'affiche tout en entier: classification avec données bas niveau (couleur dominante, moments sur les couleurs). Scène apporte très peu: couleur suffit.
+
+## Synthèse Nicolas
+Classifie des films à partir de leur trailer, applique un algo pour repérer les scènes, prend un plan par scène.
+Chaque scène est histogramme 1D de genre, chaque trailer est histogramme 2D. K-means entre les histogrammes avec distance du Khi2.
+
+## Synthèse Vivi
+Même article: traitement d'images, utilisent W-centrist, GIST model.
+Dernier article: pas vu trop en détails, biblio de ce qui a été fait jusqu'ici. Chacun le lit plus en détail.
+
