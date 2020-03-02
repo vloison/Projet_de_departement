@@ -11,4 +11,5 @@ Github -> Maxime
 Questions :
 - tensorflow ou pytorch ?
 - une ou plusieurs méthodes (k-NN, méthode bayésienne, deep nn) ?
-- Que mettre en feature ? La nationalité du film ? 
+- Que mettre en feature ? La nationalité du film ?
+- database dans le gitignore ? 
