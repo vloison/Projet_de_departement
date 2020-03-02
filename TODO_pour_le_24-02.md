@@ -7,3 +7,8 @@ Github -> Maxime
 (3) -> Nico
 (4) -> Vivi
 - Commencer à réfléchir au prétraitement de la bdd.
+
+Questions :
+- tensorflow ou pytorch ?
+- une ou plusieurs méthodes (k-NN, méthode bayésienne, deep nn) ?
+- Que mettre en feature ? La nationalité du film ? 
