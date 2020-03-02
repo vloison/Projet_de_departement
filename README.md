@@ -1,6 +1,6 @@
 ## Présentation du contexte
-2 personnes dans l'équipe data de France : Stefano Perasso et Lise Regnier
-Plusieurs projets, dont la mise en place d'un système de dashboeard pour visualiser les données et d'outils de data science pour prévision de box office etc...
+2 personnes dans l'équipe data de France : Stefano Perasso et Lise Regnier.
+Plusieurs projets, dont la mise en place d'un système de dashboard pour visualiser les données et d'outils de data science pour prévision de box office etc...
 Si on a besoin de puissance de calcul, Warner peut mettre un serveur google cloud à disposition pour faire tourner les calculs.
 
 ## Présentation
@@ -11,4 +11,10 @@ C'est donc un *problème de classification multilabel*
 En fonction de l'avancée du projet, nous pourrons explorer d'autres utilisations de l'algorithme.
 
 ## Base de donnée
-Nous disposons de la BDD d'allociné. C'est un fichier excel dont les colonnes sont : titre du film / jusqu'à 3 genres (classés par ordre d'importance décroissant)/ lien vers le poster.
+Nous disposons de la BDD d'allociné. C'est un fichier excel dont les colonnes sont : titre du film / jusqu'à 3 genres (classés par ordre d'importance décroissant)/ lien vers le poster. Les genres sont attribués manuellement, en se basant sur le synopsis des films.
+
+## Démarche
+Nous commençons par une exploration bibliographique. En parallèle, nous faisons des premiers algorithmes simples.
+L'objectif est de se familiariser avec la bdd et les outils, et d'avoir un premier résultat auquel nous comparerons nos futurs algorithmes.
+Nous commençons par un réseau k-NN monolabel où la distance est calculée par rapport aux pixels des posters.
+Nous pourrons ensuite envisager un réseau de deep learning "force brute".
