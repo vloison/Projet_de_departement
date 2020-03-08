@@ -47,18 +47,22 @@ def genre_count(movies):
 #     for genre in np.append(movies.genre_2.unique(), movies.genre_3.unique()):
 #         if genre not in genre_list:
 #             np.append(genre_list, genre)
-    for label in genre_list:
+    compt = 0
+    for  label in genre_list:
         occurences = len(movies[movies['genre_1'] == label])
         print(label, occurences)
+        if occurences > 100:
+            compt +=1
+    print(compt)
 
 
-# genre_count(MOVIES)
+genre_count(MOVIES)
 '''
 Voir quels genres supprimer
 Choisir un échantillon d'entraînement à partir des films restants
 Pas forcément tout faire au hasard: on a un training set où certains genres
 sont bien plus représentés.
 '''
-MOVIES.to_csv('../data/clean_poster_data.csv', index=True)
-not_found = database_download(SAVELOCATION, MOVIES, nb=70)
-print(not_found)
+#MOVIES.to_csv('../data/clean_poster_data.csv', index=True)
+#not_found = database_download(SAVELOCATION, MOVIES)
+#print(not_found)
