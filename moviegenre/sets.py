@@ -5,7 +5,7 @@ In this file, we create training and testing sets and save them.
 import numpy as np
 from preprocessing import show_img, preprocess, MOVIES
 
-training_size = 1000  # Size of the training set
+training_size = 2000  # Size of the training set
 testing_size = 100   # Size of the testing set
 
 

@@ -17,4 +17,5 @@ Nous disposons de la BDD d'allociné. C'est un fichier excel dont les colonnes s
 Nous commençons par une exploration bibliographique. En parallèle, nous faisons des premiers algorithmes simples.
 L'objectif est de se familiariser avec la bdd et les outils, et d'avoir un premier résultat auquel nous comparerons nos futurs algorithmes.
 Nous commençons par un réseau k-NN monolabel où la distance est calculée par rapport aux pixels des posters.
-Nous pourrons ensuite envisager un réseau de deep learning "force brute".
+Nous créons ensuite un réseau de deep learning "force brute".
+Nous pourrons ensuite envisager un réseau de deep learning, avec des features bien choisis. 

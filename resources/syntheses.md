@@ -1,3 +1,4 @@
+# Première session
 ## Synthèse Maxime
 Lien du github: https://github.com/davideiacobs/-Movie-Genres-Classification-from-their-Poster-Image-using-CNNs.
 
@@ -23,11 +24,6 @@ Deux approches possibles pour les pb de multilabels: CNN ou décomposer en sous-
 Deux versions: soit pb multilabel comme monolabel, soit pb différent: faire attention
 Considère pas l'affiche tout en entier: classification avec données bas niveau (couleur dominante, moments sur les couleurs). Scène apporte très peu: couleur suffit.
 
-Deuxième session:
-- Histogramme des couleurs (toute affiche ou par zone avec grille)
-- ORB: extrait des features, extrait les bords de manière intelligente. Bon matching
-- Force brute
-
 ## Synthèse Nicolas
 Classifie des films à partir de leur trailer, applique un algo pour repérer les scènes, prend un plan par scène.
 Chaque scène est histogramme 1D de genre, chaque trailer est histogramme 2D. K-means entre les histogrammes avec distance du Khi2.
@@ -36,3 +32,11 @@ Chaque scène est histogramme 1D de genre, chaque trailer est histogramme 2D. K-
 Même article: traitement d'images, utilisent W-centrist, GIST model.
 Dernier article: pas vu trop en détails, biblio de ce qui a été fait jusqu'ici. Chacun le lit plus en détail.
 
+
+# Deuxième session
+## Quels features prendre ?
+- Histogramme des couleurs (toute affiche ou par zone avec grille) -> Bas niveau mais peu de calculs
+- ORB: extrait des features, extrait les bords de manière intelligente. Bon matching d'une image avec la même image déformée.
+- Force brute : prendre tous les pixels -> Donne la même importance à tous les pixels, et énormément de calculs. à tenter pour avoir un témoin de comparaison
+- YOLO : reconnaissance d'objets, haut niveau -> Considère l'image intégrale (ne la segmente pas en fenêtres) => complexité moindre par rapport aux reconnaisseurs classiques.
+- Algos qui te disent quels features sont utiles : relief_svm_rfe
