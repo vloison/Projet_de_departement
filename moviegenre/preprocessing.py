@@ -10,7 +10,9 @@ from tqdm import tqdm
 
 SAVELOCATION = '../posters/'
 MOVIES = pd.read_csv('../data/clean_poster_data.csv', index_col=0)
-#print(MOVIES)
+
+# print(MOVIES)
+
 
 def get_id(path):
     """Gets the id from the Pathlib path"""
@@ -45,7 +47,6 @@ def prepare_data(dir_path, dataset, size=(150, 100, 3), save=True):
     nb_genres = len(genre_list)
     inv_genre = {genre_list[k]: k for k in range(nb_genres)}
     image_glob = sorted(Path(dir_path).glob("*.jpg"))
-    #for path in Path(dir_path).rglob('*.jpg'):
     #    print(path.name)
     posters, genres, ids = [], [], []
     for path in tqdm(image_glob):
