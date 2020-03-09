@@ -28,7 +28,7 @@ def database_download(savelocation, dataset, nb=None):
 
 SAVELOCATION = '../data/posters/'
 RAW_MOVIES = pd.read_csv('../data/poster_data.csv')
-TODAY = pd.Timestamp.today()
+TODAY = pd.Timestamp(year=2020, month=3, day=10)
 
 '''
 On nettoie la base de données en ne gardant que les films ayant un titre,
