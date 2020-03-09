@@ -23,6 +23,11 @@ Deux approches possibles pour les pb de multilabels: CNN ou décomposer en sous-
 Deux versions: soit pb multilabel comme monolabel, soit pb différent: faire attention
 Considère pas l'affiche tout en entier: classification avec données bas niveau (couleur dominante, moments sur les couleurs). Scène apporte très peu: couleur suffit.
 
+Deuxième session:
+- Histogramme des couleurs (toute affiche ou par zone avec grille)
+- ORB: extrait des features, extrait les bords de manière intelligente. Bon matching
+- Force brute
+
 ## Synthèse Nicolas
 Classifie des films à partir de leur trailer, applique un algo pour repérer les scènes, prend un plan par scène.
 Chaque scène est histogramme 1D de genre, chaque trailer est histogramme 2D. K-means entre les histogrammes avec distance du Khi2.
