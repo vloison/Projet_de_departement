@@ -41,14 +41,15 @@ MOVIES = RAW_MOVIES.dropna(
 print(MOVIES.columns)
 # MOVIES.profile_report()
 
+
 def genre_count(movies):
-    """Prints the genres (first category) and the number of appearences"""
+    """Prints the genres (first category) and the number of appearances"""
     genre_list = movies.genre_1.unique()
 #     for genre in np.append(movies.genre_2.unique(), movies.genre_3.unique()):
 #         if genre not in genre_list:
 #             np.append(genre_list, genre)
     compt = 0
-    for  label in genre_list:
+    for label in genre_list:
         occurences = len(movies[movies['genre_1'] == label])
         print(label, occurences)
         if occurences > 100:
@@ -63,6 +64,6 @@ Choisir un échantillon d'entraînement à partir des films restants
 Pas forcément tout faire au hasard: on a un training set où certains genres
 sont bien plus représentés.
 '''
-#MOVIES.to_csv('../data/clean_poster_data.csv', index=True)
-#not_found = database_download(SAVELOCATION, MOVIES)
-#print(not_found)
+MOVIES.to_csv('../data/clean_poster_data.csv', index=True)
+not_found = database_download(SAVELOCATION, MOVIES)
+print(not_found)

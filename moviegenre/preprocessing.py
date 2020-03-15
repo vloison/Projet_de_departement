@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 
-SAVELOCATION = '../posters/'
+SAVELOCATION = '../data/posters/'
 MOVIES = pd.read_csv('../data/clean_poster_data.csv', index_col=0)
 
 # print(MOVIES)
@@ -49,7 +49,7 @@ def prepare_data(dir_path, dataset, size=(150, 100, 3), save=True):
     image_glob = sorted(Path(dir_path).glob("*.jpg"))
     #    print(path.name)
     posters, genres, ids = [], [], []
-    for path in tqdm(image_glob):
+    for path in tqdm(image_glob[: 4000]):
         try:
             # Meilleure gestion d'erreur à faire
             posters.append(preprocess(imageio.imread(path), size))
@@ -72,8 +72,7 @@ def prepare_data(dir_path, dataset, size=(150, 100, 3), save=True):
 
 #X, Y, IDS = prepare_data(SAVELOCATION, MOVIES)
     
-#X = np.load('../data/numpy_posters.npy')
-#Y = np.load('../data/numpy_genres.npy')
+
 #IDS = np.load('../data/numpy_ids.npy')
 
 

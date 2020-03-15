@@ -11,11 +11,11 @@ testing_size = 100   # Size of the testing set
 
 # LOAD DATA
 
-X = np.load('../data/all_clean_posters.npy')
+X = np.load('../data/numpy_posters.npy')
 print("Shape of X:", X.shape)
-Y = np.load('../data/all_clean_genres.npy')
+Y = np.load('../data/numpy_genres.npy')
 print("Shape of Y" + str(np.shape(Y)))
-IDS = np.load('../data/all_clean_ids.npy')
+IDS = np.load('../data/numpy_ids.npy')
 print("Size of IDS:", np.max(IDS))
 print("IDS", IDS)
 
@@ -39,19 +39,37 @@ def prepare_training_set(X, Y, dataset, training_size, testing_size, IDS):
     
     Ytr = np.array([Y[np.where(IDS == i)] for i in training_set])
     Ytr = np.reshape(Ytr, (len(Ytr), 33))
+
+    Xtest = np.array([X[np.where(IDS == i)] for i in testing_set])
+    Xtest = np.reshape(Xtest, (len(Xtest), 150, 100, 3))
+
+    Ytest = np.array([Y[np.where(IDS == i)] for i in testing_set])
+    Ytest = np.reshape(Ytest, (len(Ytest), 33))
+
     # Save data
-    np.save('./sets/Xtr_tr='+str(training_size)+'_test='+str(testing_size)+'.npy'
-            , Xtr)
-    np.save('./sets/Ytr_tr='+str(training_size)+'_test='+str(testing_size)+'.npy'
-            , Ytr)
-    np.save('./sets/training_set_tr='+str(training_size)+'_test='+str(testing_size)+'.npy'
-            , training_set)
-    np.save('./sets/testing_set_tr='+str(training_size)+'_test='+str(testing_size)+'.npy'
-            , testing_set)
-    return Xtr, Ytr, training_set, testing_set
+    np.save(
+        '../data/sets/Xtr_tr='+str(training_size)+'_test='+str(testing_size)+'.npy',
+        Xtr
+    )
+    np.save(
+        '../data/sets/Ytr_tr='+str(training_size)+'_test='+str(testing_size)+'.npy',
+        Ytr
+            )
+
+    np.save(
+        '../data/sets/Xtest_tr=' + str(training_size) + '_test=' + str(testing_size) + '.npy',
+        Xtest
+    )
+    np.save(
+        '../data/sets/Ytest_tr=' + str(training_size) + '_test=' + str(testing_size) + '.npy',
+        Ytest
+    )
+
+    #return Xtr, Ytr, training_set, testing_set
 
 # Uncomment the following lines and run the file to create and save other 
 # training_sets and testing_sets
-Xtr, Ytr, tr, test = prepare_training_set(X, Y, MOVIES, training_size, testing_size, IDS)
+"""Xtr, Ytr, tr, test = """
+prepare_training_set(X, Y, MOVIES, training_size, testing_size, IDS)
 #print('Shape of Xtr', Xtr.shape)
 #print('Shape of Ytr', Ytr.shape)
