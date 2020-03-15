@@ -12,7 +12,8 @@ def database_download(savelocation, dataset, nb=None):
         path.mkdir()
     not_found = []
     print('Posters database downloading')
-    generator = dataset.iterrows() if nb is None else dataset.head(n=nb).iterrows()
+    generator = dataset.iterrows() if nb is None else dataset.head(
+        n=nb).iterrows()
     length = len(dataset) if nb is None else nb
     for index, row in tqdm(generator, total=length):
         current_name = str(index)+'.jpg'
@@ -30,16 +31,11 @@ SAVELOCATION = '../data/posters/'
 RAW_MOVIES = pd.read_csv('../data/poster_data.csv')
 TODAY = pd.Timestamp(year=2020, month=3, day=10)
 
-'''
-On nettoie la base de données en ne gardant que les films ayant un titre,
-une date de sortie, au moins un genre et un poster.
-On enlève les films pas encore sortis.
-'''
 MOVIES = RAW_MOVIES.dropna(
     subset=['title', 'release_date', 'genre_1', 'poster']).drop(
         RAW_MOVIES[RAW_MOVIES['release_date'].map(pd.Timestamp) > TODAY].index)
-print(MOVIES.columns)
 # MOVIES.profile_report()
+
 
 def genre_count(movies):
     """Prints the genres (first category) and the number of appearences"""
@@ -47,22 +43,25 @@ def genre_count(movies):
 #     for genre in np.append(movies.genre_2.unique(), movies.genre_3.unique()):
 #         if genre not in genre_list:
 #             np.append(genre_list, genre)
-    compt = 0
-    for  label in genre_list:
+    for label in genre_list:
         occurences = len(movies[movies['genre_1'] == label])
         print(label, occurences)
-        if occurences > 100:
-            compt +=1
-    print(compt)
 
+
+MOVIES = MOVIES.drop(MOVIES[MOVIES['genre_1'].isin(
+    ['Classique', 'Concert', 'Opera', 'Famille', 'Divers', 'Erotique',
+     'Sport event', 'Expérimental'])].index)
+MOVIES.loc[MOVIES['genre_1'] == 'Dessin animé', 'genre_1'] = 'Animation'
+MOVIES.loc[MOVIES['genre_1'] == 'Espionnage', 'genre_1'] = 'Thriller'
+MOVIES.loc[MOVIES['genre_1'] == 'Musical', 'genre_1'] = 'Comédie musicale'
+MOVIES.loc[MOVIES['genre_1'] == 'Péplum', 'genre_1'] = 'Aventure'
+MOVIES.loc[MOVIES['genre_1'] == 'Judiciaire', 'genre_1'] = 'Thriller'
+MOVIES.loc[MOVIES['genre_1'] == 'Bollywood', 'genre_1'] = 'Comédie musicale'
+MOVIES.loc[MOVIES['genre_1'] == 'Arts Martiaux', 'genre_1'] = 'Action'
+MOVIES.loc[MOVIES['genre_1'] == 'Guerre', 'genre_1'] = 'Action'
 
 genre_count(MOVIES)
-'''
-Voir quels genres supprimer
-Choisir un échantillon d'entraînement à partir des films restants
-Pas forcément tout faire au hasard: on a un training set où certains genres
-sont bien plus représentés.
-'''
-#MOVIES.to_csv('../data/clean_poster_data.csv', index=True)
-#not_found = database_download(SAVELOCATION, MOVIES)
-#print(not_found)
+
+NOT_FOUND = database_download(SAVELOCATION, MOVIES)
+MOVIES = MOVIES.drop(MOVIES.index[NOT_FOUND])
+MOVIES.to_csv('../data/clean_poster_data.csv', index=True)
