@@ -76,15 +76,16 @@ def plot_value_array(i, predictions_array, true_label):
     thisplot[predicted_label].set_color('red')
     thisplot[np.argmax(true_label)].set_color('blue')
 
+starting_index = 30
 num_rows = 5
 num_cols = 3
 num_images = num_rows*num_cols
 plt.figure(figsize=(2*2*num_cols, 2*num_rows))
 for i in range(num_images):
   plt.subplot(num_rows, 2*num_cols, 2*i+1)
-  plot_image(i+20, predictions[i+20], Ytest, Xtest)
+  plot_image(i+starting_index, predictions[i+starting_index], Ytest, Xtest)
   plt.subplot(num_rows, 2*num_cols, 2*i+2)
-  plot_value_array(i+20, predictions[i+20], Ytest)
+  plot_value_array(i+starting_index, predictions[i+starting_index], Ytest)
 plt.tight_layout()
 plt.show()
 
