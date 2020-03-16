@@ -83,5 +83,5 @@ def genre_count(movies):
 
 
 # MOVIES.profile_report()
-MOVIES = pd.read_csv('../data/clean_poster_data.csv')
+MOVIES = pd.read_csv('../data/clean_poster_data.csv', index_col=0)
 database_download(SAVELOCATION, MOVIES)

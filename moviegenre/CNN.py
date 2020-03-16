@@ -36,7 +36,7 @@ Xtest = np.load("../data/sets/Xtest_tr=2000_test=100.npy")
 Ytest = np.load("../data/sets/Ytest_tr=2000_test=100.npy")
 IDStest = np.load("../data/sets/IDStest_tr=2000_test=100.npy")
 
-MOVIES = pd.read_csv("../data/clean_poster_data.csv")
+MOVIES = pd.read_csv("../data/clean_poster_data.csv", index_col=0)
 class_names = MOVIES.genre_1.unique()
 # model.fit(Xtr, Ytr, batch_size=16, epochs=5, verbose=1, validation_split=0.1)
 

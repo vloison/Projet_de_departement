@@ -66,6 +66,7 @@ def prepare_data(dir_path, dataset, size=(150, 100, 3), save=True):
     print('Done.')
     return posters, genres, ids
 
+
 if __name__ == "__main__":
     X, Y, IDS = prepare_data(SAVELOCATION, MOVIES)
     show_img(MOVIES, X, Y, IDS, 13)
