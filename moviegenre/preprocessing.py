@@ -8,10 +8,8 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 
-SAVELOCATION = '../posters/'
+SAVELOCATION = '../data/posters/'
 MOVIES = pd.read_csv('../data/clean_poster_data.csv', index_col=0)
-
-# print(MOVIES)
 
 
 def get_id(path):
@@ -46,10 +44,9 @@ def prepare_data(dir_path, dataset, size=(150, 100, 3), save=True):
     genre_list = dataset.genre_1.unique()
     nb_genres = len(genre_list)
     inv_genre = {genre_list[k]: k for k in range(nb_genres)}
-    image_glob = sorted(Path(dir_path).glob("*.jpg"))
-    #    print(path.name)
+    image_glob = Path(dir_path).glob("*.jpg")
     posters, genres, ids = [], [], []
-    for path in tqdm(image_glob):
+    for path in tqdm(sorted(image_glob)):
         try:
             # Meilleure gestion d'erreur à faire
             posters.append(preprocess(imageio.imread(path), size))
@@ -61,7 +58,7 @@ def prepare_data(dir_path, dataset, size=(150, 100, 3), save=True):
             genres.append(vect_genre)
             ids.append(index)
         except Exception as e:
-            print(e)
+            print("Erreur", e)
     if save:
         np.save('../data/numpy_posters.npy', posters)
         np.save('../data/numpy_genres', genres)
@@ -70,11 +67,5 @@ def prepare_data(dir_path, dataset, size=(150, 100, 3), save=True):
     return posters, genres, ids
 
 
-#X, Y, IDS = prepare_data(SAVELOCATION, MOVIES)
-    
-#X = np.load('../data/numpy_posters.npy')
-#Y = np.load('../data/numpy_genres.npy')
-#IDS = np.load('../data/numpy_ids.npy')
-
-
-#show_img(MOVIES, X, Y, IDS, 13)
+X, Y, IDS = prepare_data(SAVELOCATION, MOVIES)
+show_img(MOVIES, X, Y, IDS, 13)
