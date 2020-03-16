@@ -56,9 +56,9 @@ def genre_count(movies):
         print(label, occurences)
 
 
-MOVIES = RAW_MOVIES.dropna(
-    subset=['title', 'release_date', 'genre_1', 'poster']).drop(
-        RAW_MOVIES[RAW_MOVIES['release_date'].map(pd.Timestamp) > TODAY].index)
+# MOVIES = RAW_MOVIES.dropna(
+#     subset=['title', 'release_date', 'genre_1', 'poster']).drop(
+#         RAW_MOVIES[RAW_MOVIES['release_date'].map(pd.Timestamp) > TODAY].index)
 
 # NOT_FOUND = url_exist(MOVIES)
 # NOT_FOUND = [255,279]
