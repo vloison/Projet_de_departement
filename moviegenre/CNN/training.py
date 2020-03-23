@@ -10,7 +10,14 @@ MOVIES = pd.read_csv("../data/clean_poster_data.csv", index_col=0)
 class_names = MOVIES.genre_1.unique()
 
 
-def train_model(class_names, Xtr_path, Ytr_path, Xtest_path, Ytest_path, model_path=None, save_path=None):
+def train_model(
+        class_names,
+        Xtr_path, Ytr_path,
+        Xtest_path, Ytest_path,
+        nb_epochs=1,
+        model_path=None, save_path=None,
+        verbose=True
+):
     if model_path is None :
         model = create_model()
     else:
@@ -22,7 +29,7 @@ def train_model(class_names, Xtr_path, Ytr_path, Xtest_path, Ytest_path, model_p
     Xtest = np.load(Xtest_path)
     Ytest = np.load(Ytest_path)
 
-    model.fit(Xtr, Ytr, batch_size=16, epochs=1, verbose=1, validation_split=0.1)
+    model.fit(Xtr, Ytr, batch_size=16, epochs=nb_epochs, verbose=verbose, validation_split=0.1)
 
     if save_path is not None:
         model.save(save_path)
@@ -31,5 +38,6 @@ def train_model(class_names, Xtr_path, Ytr_path, Xtest_path, Ytest_path, model_p
 
     print("Accuracy on testing set:", accuracy.mono_label(Ytest, Ypred))
 
-    display.plot_test_results(Xtest, Ytest, class_names, Ypred, 30, 5, 3)
-    plt.show()
+    if verbose:
+        display.plot_test_results(Xtest, Ytest, class_names, Ypred, 30, 5, 3)
+        plt.show()
