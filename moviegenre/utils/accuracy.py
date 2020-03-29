@@ -7,7 +7,6 @@ def mono_label(Y_real, Y_pred):
 
     return (label_real == label_pred).mean()
 
-
 def notebook(y_test, pred):
     value = 0
     for i in range(0, len(pred)):
