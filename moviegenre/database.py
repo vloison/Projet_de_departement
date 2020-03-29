@@ -85,6 +85,14 @@ def replace_genres(movies):
             'Classique', 'Concert', 'Opera', 'Famille', 'Show', 'Divers',
             'Erotique', 'Sport event', 'Expérimental', 'Movie night']),
                    genre_column] = np.nan
+
+    for genre_column in ['genre_1', 'genre_2', 'genre_3']:
+        movies.loc[movies[genre_column] == 'Comédie dramatique',
+                   genre_column] = 'Comédie-dramatique'
+        movies.loc[movies[genre_column] == 'Comédie-musicale',
+                   genre_column] = 'Comédie-musicale'
+        movies.loc[movies[genre_column] == 'Science fiction',
+                   genre_column] = 'Science-fiction'
     return movies
 
 

@@ -13,7 +13,6 @@ def read_csv_with_genres(file_name):
     def aux(string):
         return ''.join(c for c in string if c not in ['[', ']', "'"])
     movies = pd.read_csv(file_name, index_col='allocine_id')
-    movies['genres'] = movies['genres'].str.translate("[]'")
     for _, row in movies.iterrows():
         row.genres =  aux(row.genres).split(" ")
     return movies
@@ -81,8 +80,8 @@ GENRES_DICT = {
     'Aventure': 2,
     'Biopic': 3,
     'Comédie': 4,
-    'Comédie dramatique': 5,
-    'Comédie musicale': 6,
+    'Comédie-dramatique': 5,
+    'Comédie-musicale': 6,
     'Documentaire': 7,
     'Drame': 8,
     'Epouvante-horreur': 9,
@@ -90,7 +89,7 @@ GENRES_DICT = {
     'Historique': 11,
     'Policier': 12,
     'Romance': 13,
-    'Science fiction': 14,
+    'Science-fiction': 14,
     'Thriller': 15,
     'Western': 16
 }
