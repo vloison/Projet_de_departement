@@ -28,7 +28,7 @@ def get_id(path):
 def show_img(dataset, posters, labels, ids, index):
     """Shows the image with id at index position in ids"""
     title = dataset.at[ids[index], 'title']
-    genre = dataset.at[ids[index], 'genre_1']+', '+str(ids[index])
+    genre = dataset.at[ids[index], 'genres'][0]+', '+str(ids[index])
 #     genres = [dataset.at[ids[index],'genre_'+i] for i in ['1','2','3']]
     plt.imshow(posters[index])
     plt.title('{} \n {}'.format(title, genre))
@@ -65,8 +65,8 @@ def prepare_data(dir_path, dataset, size=(150, 100, 3), save=True):
             print("Erreur", e)
     if save:
         np.save('../data/numpy_posters.npy', posters)
-        np.save('../data/numpy_genres', genres)
-        np.save('../data/numpy_ids', ids)
+        np.save('../data/numpy_genres.npy', genres)
+        np.save('../data/numpy_ids.npy', ids)
     print('Done.')
     return posters, genres, ids
 
@@ -95,5 +95,7 @@ GENRES_DICT = {
 }
 
 if __name__ == "__main__":
-    X, Y, IDS = prepare_data(SAVELOCATION, MOVIES)
+    #  X, Y, IDS = prepare_data(SAVELOCATION, MOVIES)
+    X, Y, IDS = np.load('../data/numpy_posters.npy'), np.load('../data/numpy_genres.npy'), np.load('../data/numpy_ids.npy')
+    print(X.shape, Y.shape, IDS.shape)
     show_img(MOVIES, X, Y, IDS, 13)

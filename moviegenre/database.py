@@ -126,5 +126,5 @@ def prepare_dataset(raw_movies, verbose=True):
 
 
 MOVIES = prepare_dataset(RAW_MOVIES)
-MOVIES.to_csv('../data/clean_poster_data.csv.csv')
+MOVIES.to_csv('../data/clean_poster_data.csv')
 database_download(SAVELOCATION, MOVIES)
