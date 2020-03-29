@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """Downloads the posters and cleans the database"""
-from utils.constants import SAVELOCATION, 
-    MOVIES_LOCATION, CLEAN_MOVIES_LOCATION, 
-    FIRST_DATE, LAST_DATE
+from utils.constants import SAVELOCATION, MOVIES_PATH, CLEAN_MOVIES_PATH, FIRST_DATE, LAST_DATE
 
 from pathlib import Path
 from urllib.request import urlretrieve
@@ -121,8 +119,8 @@ def prepare_dataset(raw_movies, verbose=True):
 
 
 if __name__ == '__main__':
-    RAW_MOVIES = pd.read_csv(MOVIES_LOCATION, sep=',',
+    RAW_MOVIES = pd.read_csv(MOVIES_PATH, sep=',',
                          index_col='allocine_id')
     MOVIES = prepare_dataset(RAW_MOVIES)
-    MOVIES.to_csv(CLEAN_MOVIES_LOCATION)
+    MOVIES.to_csv(CLEAN_MOVIES_PATH)
     database_download(SAVELOCATION, MOVIES)
