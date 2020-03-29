@@ -1,31 +1,30 @@
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from preprocessing import show_img
-# from tensorflow.keras.models import Sequential
-# from tensorflow.keras.layers import Dense, Dropout, Flatten
-# from tensorflow.keras.layers import Conv2D, MaxPooling2D, BatchNormalization
-# from tensorflow.keras.optimizers import Adagrad
-# from tensorflow.keras.metrics import Accuracy
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout, Flatten
+from tensorflow.keras.layers import Conv2D, MaxPooling2D
+from tensorflow.keras.optimizers import Adagrad
 from tensorflow.keras.models import load_model
 
-# model = Sequential()
-# model.add(Conv2D(32, kernel_size=(3, 3), activation="relu", input_shape=(150, 100, 3)))
-# model.add(Conv2D(64, (3, 3), activation="relu"))
-# model.add(MaxPooling2D(pool_size=(2, 2)))
-# model.add(Dropout(0.25))
-# 
-# model.add(Conv2D(128, kernel_size=(3, 3), activation="relu"))
-# model.add(Conv2D(64, (3, 3), activation="relu"))
-# model.add(MaxPooling2D(pool_size=(2, 2)))
-# model.add(Dropout(0.25))
-# 
-# model.add(Flatten())
-# model.add(Dense(128, activation="relu"))
-# model.add(Dropout(0.5))
-# model.add(Dense(17, activation="sigmoid"))
-# 
-# model.compile(loss="binary_crossentropy", optimizer=Adagrad(), metrics=["accuracy"])
+
+def CNN(shape, nb_genres):
+    model = Sequential()
+    model.add(Conv2D(32, kernel_size=(3, 3), activation="relu", input_shape=shape))
+    model.add(Conv2D(64, (3, 3), activation="relu"))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.25))
+
+    model.add(Conv2D(128, kernel_size=(3, 3), activation="relu"))
+    model.add(Conv2D(64, (3, 3), activation="relu"))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.25))
+
+    model.add(Flatten())
+    model.add(Dense(128, activation="relu"))
+    model.add(Dropout(0.5))
+    model.add(Dense(nb_genres, activation="sigmoid"))
+
+    model.compile(loss="binary_crossentropy", optimizer=Adagrad(), metrics=["accuracy"])
+
+    return model
 
 model = load_model('../data/first_model.h5')
 Xtr = np.load("../data/sets/Xtr_tr=2000_test=100.npy")
@@ -45,36 +44,6 @@ predictions = model.predict(Xtest)
 print(predictions[0])
 # model.save('../data/first_model.h5')
 
-def plot_image(i, predictions_array, true_label, img):
-    predictions_array, true_label, img = predictions_array, true_label[i], img[i]
-    plt.grid(False)
-    plt.xticks([])
-    plt.yticks([])
-
-    plt.imshow(img, cmap=plt.cm.binary)
-
-    predicted_label = np.argmax(predictions_array)
-    if predicted_label == np.argmax(true_label):
-      color = 'blue'
-    else:
-      color = 'red'
-
-    plt.xlabel("{} {:2.0f}% ({})".format(class_names[predicted_label],
-                                100*np.max(predictions_array),
-                                class_names[np.argmax(true_label)]),
-                                color=color)
-
-def plot_value_array(i, predictions_array, true_label):
-    predictions_array, true_label = predictions_array, true_label[i]
-    plt.grid(False)
-    plt.xticks([])
-    plt.yticks([])
-    thisplot = plt.bar(range(17), predictions_array, color="#777777")
-    plt.ylim([0, 1])
-    predicted_label = np.argmax(predictions_array)
-
-    thisplot[predicted_label].set_color('red')
-    thisplot[np.argmax(true_label)].set_color('blue')
 
 starting_index = 30
 num_rows = 5

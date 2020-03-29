@@ -8,8 +8,15 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 
-SAVELOCATION = '../data/posters/'
-MOVIES = pd.read_csv('../data/clean_poster_data.csv', index_col=0)
+
+def read_csv_with_genres(file_name):
+    def aux(string):
+        return ''.join(c for c in string if c not in ['[', ']', "'"])
+    movies = pd.read_csv(file_name, index_col='allocine_id')
+    movies['genres'] = movies['genres'].str.translate("[]'")
+    for _, row in movies.iterrows():
+        row.genres =  aux(row.genres).split(" ")
+    return movies
 
 
 def get_id(path):
@@ -66,6 +73,29 @@ def prepare_data(dir_path, dataset, size=(150, 100, 3), save=True):
     print('Done.')
     return posters, genres, ids
 
+
+SAVELOCATION = '../data/posters/'
+MOVIES = read_csv_with_genres('../data/clean_poster_data.csv')
+
+GENRES_DICT = {
+    'Action': 0,
+    'Animation': 1,
+    'Aventure': 2,
+    'Biopic': 3,
+    'Comédie': 4,
+    'Comédie dramatique': 5,
+    'Comédie musicale': 6,
+    'Documentaire': 7,
+    'Drame': 8,
+    'Epouvante-horreur': 9,
+    'Fantastique': 10,
+    'Historique': 11,
+    'Policier': 12,
+    'Romance': 13,
+    'Science fiction': 14,
+    'Thriller': 15,
+    'Western': 16
+}
 
 if __name__ == "__main__":
     X, Y, IDS = prepare_data(SAVELOCATION, MOVIES)

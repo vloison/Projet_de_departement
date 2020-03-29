@@ -4,15 +4,18 @@ from urllib.request import urlretrieve
 import pandas as pd
 from tqdm import tqdm  # barre de chargement
 import requests
+import numpy as np
 
 
-def url_exist(dataset):
+def url_exist(dataset, verbose=True):
     not_found = []
     length = len(dataset)
     for index, row in tqdm(dataset.iterrows(), total=length):
         r = requests.head(row.poster)
         if r.status_code != requests.codes.ok:
             not_found.append(index)
+    if verbose:
+        print('URLS NOT FOUND:', not_found)
     return not_found
 
 
@@ -28,6 +31,7 @@ def database_download(savelocation, dataset, nb=None):
     length = len(dataset) if nb is None else nb
     for index, row in tqdm(generator, total=length):
         current_name = str(index)+'.jpg'
+        print(current_name)
         jpgname = path / current_name
         try:
             if not Path(jpgname).is_file():
@@ -41,47 +45,83 @@ def database_download(savelocation, dataset, nb=None):
 
 
 SAVELOCATION = '../data/posters/'
-RAW_MOVIES = pd.read_csv('../data/poster_data.csv')
-TODAY = pd.Timestamp(year=2020, month=3, day=10)
+RAW_MOVIES = pd.read_csv('../data/poster_data_2.csv', sep=',',
+                         index_col='allocine_id')
+FIRST_DATE = pd.Timestamp(year=2010, month=1, day=1)
+LAST_DATE = pd.Timestamp(year=2020, month=1, day=1)
 
 
-def genre_count(movies):
+def genre_count(movies, genre_column):
     """Prints the genres (first category) and the number of appearences"""
-    genre_list = movies.genre_1.unique()
-#     for genre in np.append(movies.genre_2.unique(), movies.genre_3.unique()):
-#         if genre not in genre_list:
-#             np.append(genre_list, genre)
-    for label in genre_list:
-        occurences = len(movies[movies['genre_1'] == label])
+    for label in movies[genre_column].unique():
+        occurences = len(movies[movies[genre_column] == label])
         print(label, occurences)
+    print(len(movies[genre_column].unique()), '\n')
 
 
-# MOVIES = RAW_MOVIES.dropna(
-#     subset=['title', 'release_date', 'genre_1', 'poster']).drop(
-#         RAW_MOVIES[RAW_MOVIES['release_date'].map(pd.Timestamp) > TODAY].index)
+def replace_genres(movies):
+    """Replace genres"""
+    movies = movies.drop(movies[movies['genre_1'].isin(
+        ['Classique', 'Concert', 'Opera', 'Famille', 'Divers', 'Erotique',
+         'Sport event', 'Expérimental'])].index)
+    for genre_column in ['genre_1', 'genre_2', 'genre_3']:
+        movies.loc[movies[genre_column] == 'Dessin animé',
+                   genre_column] = 'Animation'
+        movies.loc[movies[genre_column] == 'Espionnage',
+                   genre_column] = 'Thriller'
+        movies.loc[movies[genre_column] == 'Musical',
+                   genre_column] = 'Comédie musicale'
+        movies.loc[movies[genre_column] == 'Péplum',
+                   genre_column] = 'Aventure'
+        movies.loc[movies[genre_column] == 'Judiciaire',
+                   genre_column] = 'Thriller'
+        movies.loc[movies[genre_column] == 'Bollywood',
+                   genre_column] = 'Comédie musicale'
+        movies.loc[movies[genre_column] == 'Arts Martiaux',
+                   genre_column] = 'Action'
+        movies.loc[movies[genre_column] == 'Guerre',
+                   genre_column] = 'Action'
+        movies.loc[movies[genre_column].isin([
+            'Classique', 'Concert', 'Opera', 'Famille', 'Show', 'Divers',
+            'Erotique', 'Sport event', 'Expérimental', 'Movie night']),
+                   genre_column] = np.nan
+    return movies
 
-# NOT_FOUND = url_exist(MOVIES)
-# NOT_FOUND = [255,279]
-# MOVIES = MOVIES.drop(MOVIES.index[NOT_FOUND])
-# print(NOT_FOUND)
-# MOVIES = MOVIES.drop(MOVIES[MOVIES['genre_1'].isin(
-#     ['Classique', 'Concert', 'Opera', 'Famille', 'Divers', 'Erotique',
-#      'Sport event', 'Expérimental'])].index)
-# MOVIES.loc[MOVIES['genre_1'] == 'Dessin animé', 'genre_1'] = 'Animation'
-# MOVIES.loc[MOVIES['genre_1'] == 'Espionnage', 'genre_1'] = 'Thriller'
-# MOVIES.loc[MOVIES['genre_1'] == 'Musical', 'genre_1'] = 'Comédie musicale'
-# MOVIES.loc[MOVIES['genre_1'] == 'Péplum', 'genre_1'] = 'Aventure'
-# MOVIES.loc[MOVIES['genre_1'] == 'Judiciaire', 'genre_1'] = 'Thriller'
-# MOVIES.loc[MOVIES['genre_1'] == 'Bollywood', 'genre_1'] = 'Comédie musicale'
-# MOVIES.loc[MOVIES['genre_1'] == 'Arts Martiaux', 'genre_1'] = 'Action'
-# MOVIES.loc[MOVIES['genre_1'] == 'Guerre', 'genre_1'] = 'Action'
 
-# MOVIES.profile_report()
-# genre_count(MOVIES)
+def prepare_dataset(raw_movies, verbose=True):
+    """Prepare dataset"""
+    movies = raw_movies[['title', 'genre_1', 'genre_2', 'genre_3',
+                         'release_date', 'pays', 'poster']].dropna(
+                        subset=['title', 'genre_1', 'poster', 'release_date'])
+    movies.drop(movies[LAST_DATE < movies['release_date'].map(
+        pd.Timestamp)].index, inplace=True)
+    movies.drop(movies[FIRST_DATE > movies['release_date'].map(
+        pd.Timestamp)].index, inplace=True)
 
-# MOVIES.to_csv('../data/clean_poster_data.csv', index=True)
+#     NOT_FOUND = url_exist(movies, verbose)
+#     movies = movies.drop(movies.index[NOT_FOUND])
+    movies = replace_genres(movies)
+    movies['genres'] = movies[['genre_1', 'genre_2', 'genre_3']].apply(
+        lambda x: ';'.join(x.dropna().astype(str)),
+        axis=1
+    ).str.split(';')
+    genre_count(movies, 'genre_1')
+#     genre_count(movies, 'genre_2')
+#     genre_count(movies, 'genre_3')
+    for _, row in movies.iterrows():
+        row.genres = np.unique(row.genres)
+    movies.drop(['genre_1', 'genre_2', 'genre_3'], axis=1, inplace=True)
+    return movies
 
 
-# MOVIES.profile_report()
-MOVIES = pd.read_csv('../data/clean_poster_data.csv', index_col=0)
-database_download(SAVELOCATION, MOVIES)
+
+
+
+MOVIES = prepare_dataset(RAW_MOVIES)
+# print(MOVIES[MOVIES['title'] == 'Avengers'])
+print(MOVIES.head(5))
+MOVIES.to_csv('../data/clean_poster_data.csv.csv')
+MOVIES = read_csv_with_genres('../data/clean_poster_data.csv')
+print(MOVIES.head(5))
+print(MOVIES.at[200448, 'genres'][0])
+# database_download(SAVELOCATION, MOVIES, nb=10)
