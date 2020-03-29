@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Downloads the posters and cleans the database"""
 from pathlib import Path
 from urllib.request import urlretrieve
@@ -31,11 +32,10 @@ def database_download(savelocation, dataset, nb=None):
     length = len(dataset) if nb is None else nb
     for index, row in tqdm(generator, total=length):
         current_name = str(index)+'.jpg'
-        print(current_name)
         jpgname = path / current_name
         try:
             if not Path(jpgname).is_file():
-                urlretrieve(row.poster, Path(jpgname))
+                urlretrieve(row.poster, str(Path(jpgname)))
         except Exception as e:
             print(e)
             not_found.append(index)
@@ -118,10 +118,5 @@ def prepare_dataset(raw_movies, verbose=True):
 
 
 MOVIES = prepare_dataset(RAW_MOVIES)
-# print(MOVIES[MOVIES['title'] == 'Avengers'])
-print(MOVIES.head(5))
 MOVIES.to_csv('../data/clean_poster_data.csv.csv')
-MOVIES = read_csv_with_genres('../data/clean_poster_data.csv')
-print(MOVIES.head(5))
-print(MOVIES.at[200448, 'genres'][0])
-# database_download(SAVELOCATION, MOVIES, nb=10)
+database_download(SAVELOCATION, MOVIES)
