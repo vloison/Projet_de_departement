@@ -48,9 +48,7 @@ def prepare_data(dir_path, dataset, size=(150, 100, 3), save=True):
     """Generates the data to be used by the neural network"""
     print('Generating dataset...')
 
-    genre_list = dataset.genre_1.unique()
-    nb_genres = len(genre_list)
-    inv_genre = {genre_list[k]: k for k in range(nb_genres)}
+    nb_genres = len(GENRES_DICT)
     image_glob = Path(dir_path).glob("*.jpg")
     posters, genres, ids = [], [], []
     for path in tqdm(sorted(image_glob)):
@@ -61,7 +59,7 @@ def prepare_data(dir_path, dataset, size=(150, 100, 3), save=True):
             vect_genre = np.zeros(nb_genres, dtype=int)
             # Rajoute un 1 à l'indice correspondant à la position
             # du premier genre de ce film dans la liste des genres
-            vect_genre[inv_genre[dataset.at[index, 'genre_1']]] = 1
+            vect_genre[GENRES_DICT[dataset.at[index, 'genres'][0]]] = 1
             genres.append(vect_genre)
             ids.append(index)
         except Exception as e:
