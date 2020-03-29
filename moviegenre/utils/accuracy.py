@@ -16,4 +16,4 @@ def notebook(y_test, pred):
         for j in first3_index:
             if j in correct:
                 value += 1
-    print(value/len(pred))
+    return value/len(pred)

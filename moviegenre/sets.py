@@ -3,7 +3,7 @@
 In this file, we create training and testing sets and save them.
 """
 import numpy as np
-
+from utils.constants import TRAINING_SIZE, TESTING_SIZE
 
 # Definition of the training and testing sets
 

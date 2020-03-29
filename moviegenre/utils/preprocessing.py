@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import pandas as pd
 
 def read_csv_with_genres(file_name):
     def aux(string):

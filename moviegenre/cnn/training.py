@@ -15,10 +15,6 @@ def train_model(
         model_path=None, save_path=None,
         verbose=True
 ):
-    if model_path is None :
-        model = create_model()
-    else:
-        model = load_model(model_path)
 
     Xtr = np.load(Xtr_path)
     Ytr = np.load(Ytr_path)
@@ -26,7 +22,11 @@ def train_model(
     Xtest = np.load(Xtest_path)
     Ytest = np.load(Ytest_path)
 
-    model.fit(Xtr, Ytr, batch_size=16, epochs=nb_epochs, verbose=verbose, validation_split=0.1)
+    if model_path is None :
+        model = create_model()
+        model.fit(Xtr, Ytr, batch_size=16, epochs=nb_epochs, verbose=verbose, validation_split=0.1)
+    else:
+        model = load_model(model_path)
 
     if save_path is not None:
         model.save(save_path)
