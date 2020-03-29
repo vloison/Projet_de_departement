@@ -1,4 +1,8 @@
+# -*- coding: utf-8 -*-
 """Preprocesses the input data"""
+from utils.preprocessing import read_csv_with_genres, get_id, normalize
+from utils.constants import GENRES_DICT, CLEAN_MOVIES_PATH, SAVELOCATION
+
 from pathlib import Path
 import imageio
 import skimage.transform
@@ -7,40 +11,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 
-
-
-def read_csv_with_genres(file_name):
-    def aux(string):
-        return ''.join(c for c in string if c not in ['[', ']', "'"])
-    movies = pd.read_csv(file_name, index_col='allocine_id')
-    for _, row in movies.iterrows():
-        row.genres =  aux(row.genres).split(" ")
-    return movies
-
-
-def get_id(path):
-    """Gets the id from the Pathlib path"""
-    filename = path.parts[-1]
-    index_f = filename.rfind(".jpg")
-    return int(filename[:index_f])
-
-
-def show_img(dataset, posters, labels, ids, index):
-    """Shows the image with id at index position in ids"""
-    title = dataset.at[ids[index], 'title']
-    genre = dataset.at[ids[index], 'genres'][0]+', '+str(ids[index])
-#     genres = [dataset.at[ids[index],'genre_'+i] for i in ['1','2','3']]
-    plt.imshow(posters[index])
-    plt.title('{} \n {}'.format(title, genre))
-    plt.show()
-
-
-def preprocess(img, size=(150, 100, 3)):
-    """Normalizes the image"""
-    img = skimage.transform.resize(img, size)
-    img = img.astype(np.float32)
-#     img = (img / 127.5) -1
-    return img
 
 
 def prepare_data(dir_path, dataset, size=(150, 100, 3), save=True):
@@ -53,12 +23,13 @@ def prepare_data(dir_path, dataset, size=(150, 100, 3), save=True):
     for path in tqdm(sorted(image_glob)):
         try:
             # Meilleure gestion d'erreur à faire
-            posters.append(preprocess(imageio.imread(path), size))
+            posters.append(normalize(imageio.imread(path), size))
             index = get_id(path)
             vect_genre = np.zeros(nb_genres, dtype=int)
             # Rajoute un 1 à l'indice correspondant à la position
             # du premier genre de ce film dans la liste des genres
-            vect_genre[GENRES_DICT[dataset.at[index, 'genres'][0]]] = 1
+            for genre_name in dataset.at[index, 'genres']:
+                vect_genre[GENRES_DICT[genre_name]] = 1
             genres.append(vect_genre)
             ids.append(index)
         except Exception as e:
@@ -71,31 +42,8 @@ def prepare_data(dir_path, dataset, size=(150, 100, 3), save=True):
     return posters, genres, ids
 
 
-SAVELOCATION = '../data/posters/'
-MOVIES = read_csv_with_genres('../data/clean_poster_data.csv')
-
-GENRES_DICT = {
-    'Action': 0,
-    'Animation': 1,
-    'Aventure': 2,
-    'Biopic': 3,
-    'Comédie': 4,
-    'Comédie-dramatique': 5,
-    'Comédie-musicale': 6,
-    'Documentaire': 7,
-    'Drame': 8,
-    'Epouvante-horreur': 9,
-    'Fantastique': 10,
-    'Historique': 11,
-    'Policier': 12,
-    'Romance': 13,
-    'Science-fiction': 14,
-    'Thriller': 15,
-    'Western': 16
-}
-
 if __name__ == "__main__":
+    MOVIES = read_csv_with_genres(CLEAN_MOVIES_PATH)
     #  X, Y, IDS = prepare_data(SAVELOCATION, MOVIES)
     X, Y, IDS = np.load('../data/numpy_posters.npy'), np.load('../data/numpy_genres.npy'), np.load('../data/numpy_ids.npy')
     print(X.shape, Y.shape, IDS.shape)
-    show_img(MOVIES, X, Y, IDS, 13)

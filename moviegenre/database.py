@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 """Downloads the posters and cleans the database"""
+from utils.constants import SAVELOCATION, 
+    MOVIES_LOCATION, CLEAN_MOVIES_LOCATION, 
+    FIRST_DATE, LAST_DATE
+
 from pathlib import Path
 from urllib.request import urlretrieve
 import pandas as pd
@@ -42,13 +46,6 @@ def database_download(savelocation, dataset, nb=None):
     print('Database downloaded')
     print(not_found)
     return not_found
-
-
-SAVELOCATION = '../data/posters/'
-RAW_MOVIES = pd.read_csv('../data/poster_data_2.csv', sep=',',
-                         index_col='allocine_id')
-FIRST_DATE = pd.Timestamp(year=2010, month=1, day=1)
-LAST_DATE = pd.Timestamp(year=2020, month=1, day=1)
 
 
 def genre_count(movies, genre_column):
@@ -123,8 +120,9 @@ def prepare_dataset(raw_movies, verbose=True):
 
 
 
-
-
-MOVIES = prepare_dataset(RAW_MOVIES)
-MOVIES.to_csv('../data/clean_poster_data.csv')
-database_download(SAVELOCATION, MOVIES)
+if __name__ == '__main__':
+    RAW_MOVIES = pd.read_csv(MOVIES_LOCATION, sep=',',
+                         index_col='allocine_id')
+    MOVIES = prepare_dataset(RAW_MOVIES)
+    MOVIES.to_csv(CLEAN_MOVIES_LOCATION)
+    database_download(SAVELOCATION, MOVIES)
