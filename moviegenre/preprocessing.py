@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Preprocesses the input data"""
 from utils.preprocessing import read_csv_with_genres, get_id, normalize
-from utils.constants import GENRES_DICT, CLEAN_MOVIES_PATH, SAVELOCATION
+from utils.constants import GENRES_DICT, CLEAN_MOVIES_PATH, SAVELOCATION, SIZE
 
 from pathlib import Path
 import imageio
@@ -43,7 +43,7 @@ def prepare_data(dir_path, dataset, size=(150, 100, 3), save=True):
 
 
 if __name__ == "__main__":
-    MOVIES = read_csv_with_genres(CLEAN_MOVIES_PATH)
-    #  X, Y, IDS = prepare_data(SAVELOCATION, MOVIES)
+    # MOVIES = read_csv_with_genres(CLEAN_MOVIES_PATH)
+    # X, Y, IDS = prepare_data(SAVELOCATION, MOVIES, SIZE)
     X, Y, IDS = np.load('../data/numpy_posters.npy'), np.load('../data/numpy_genres.npy'), np.load('../data/numpy_ids.npy')
     print(X.shape, Y.shape, IDS.shape)
