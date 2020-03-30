@@ -10,6 +10,7 @@ import requests
 import numpy as np
 
 
+
 def url_exist(dataset, verbose=True):
     not_found = []
     length = len(dataset)
@@ -84,7 +85,7 @@ def replace_genres(movies):
     for genre_column in ['genre_1', 'genre_2', 'genre_3']:
         movies.loc[movies[genre_column] == 'Comédie dramatique',
                    genre_column] = 'Comédie-dramatique'
-        movies.loc[movies[genre_column] == 'Comédie-musicale',
+        movies.loc[movies[genre_column] == 'Comédie musicale',
                    genre_column] = 'Comédie-musicale'
         movies.loc[movies[genre_column] == 'Science fiction',
                    genre_column] = 'Science-fiction'
@@ -109,13 +110,12 @@ def prepare_dataset(raw_movies, verbose=True):
         axis=1
     ).str.split(';')
     genre_count(movies, 'genre_1')
-#     genre_count(movies, 'genre_2')
-#     genre_count(movies, 'genre_3')
+    genre_count(movies, 'genre_2')
+    genre_count(movies, 'genre_3')
     for _, row in movies.iterrows():
         row.genres = np.unique(row.genres)
     movies.drop(['genre_1', 'genre_2', 'genre_3'], axis=1, inplace=True)
     return movies
-
 
 
 if __name__ == '__main__':
@@ -123,4 +123,4 @@ if __name__ == '__main__':
                          index_col='allocine_id')
     MOVIES = prepare_dataset(RAW_MOVIES)
     MOVIES.to_csv(CLEAN_MOVIES_PATH)
-    database_download(SAVELOCATION, MOVIES)
+    #database_download(SAVELOCATION, MOVIES)

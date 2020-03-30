@@ -24,7 +24,7 @@ GENRES_DICT = {
     'Thriller': 15,
     'Western': 16
 }
-SIZE = (150, 100)
+SIZE = (150, 100, 3)
 FIRST_DATE = pd.Timestamp(year=2010, month=1, day=1)
 LAST_DATE = pd.Timestamp(year=2020, month=1, day=1)
 

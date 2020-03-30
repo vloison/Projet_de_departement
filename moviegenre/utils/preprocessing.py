@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
+from skimage import transform
+import numpy as np
 
 def read_csv_with_genres(file_name):
     def aux(string):
@@ -19,7 +21,7 @@ def get_id(path):
 
 def normalize(img, size=(150, 100, 3)):
     """Normalizes the image"""
-    img = skimage.transform.resize(img, size)
+    img = transform.resize(img, size)
     img = img.astype(np.float32)
 #     img = (img / 127.5) -1
     return img

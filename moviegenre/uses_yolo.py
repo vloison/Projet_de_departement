@@ -1,5 +1,4 @@
 import numpy as np
-import os
 from PIL import Image, ImageFont, ImageDraw
 import matplotlib.pyplot as plt
 from keras_yolo.yolo import YOLO
@@ -41,9 +40,8 @@ def detect_image_draw(yolo, image):
     return(img)
 
 if __name__ == "__main__":
-    current_path = os.path.abspath('')
-    path_image1 = os.path.join(current_path, "keras_yolo/pictures/fantasy_island.jpg")
-    path_image2 = os.path.join(current_path, "keras_yolo/pictures/TED.jpeg")
+    path_image1 = "./keras_yolo/pictures/ete_chiot.jpeg"
+    path_image2 = "./keras_yolo/pictures/TED.jpeg"
 
 
     yolo = YOLO()
@@ -53,6 +51,7 @@ if __name__ == "__main__":
     image1 = Image.open(path_image1)
     found = detect_image_dictionnary(yolo, image1)
     print(found)
+    
 
     #affiche l'image
 
