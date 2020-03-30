@@ -3,7 +3,7 @@
 In this file, we create training and testing sets and save them.
 """
 import numpy as np
-
+from utils.constants import TRAINING_SIZE, TESTING_SIZE
 
 # Definition of the training and testing sets
 
@@ -45,16 +45,13 @@ def prepare_sets(X, Y, IDS, training_size, testing_size):
     return Xtr, Ytr, IDStr, Xtest, Ytest, IDStest
 
 
-TRAINING_SIZE = 2000  # Size of the training set
-TESTING_SIZE = 100   # Size of the testing set
-
-# Load data
-X = np.load('../data/numpy_posters.npy')
-print("Shape of X:", X.shape)
-Y = np.load('../data/numpy_genres.npy')
-print("Shape of Y", Y.shape)
-IDS = np.load('../data/numpy_ids.npy')
-
-Xtr, Ytr, IDStr, Xtest, Ytest, IDStest = prepare_sets(X, Y, IDS, TRAINING_SIZE, TESTING_SIZE)
-print('Shape of Xtr', Xtr.shape)
-print('Shape of Ytr', Ytr.shape)
+if __name__ == '__main__':
+    # Load data
+    X = np.load('../data/numpy_posters.npy')
+    print("Shape of X:", X.shape)
+    Y = np.load('../data/numpy_genres.npy')
+    print("Shape of Y", Y.shape)
+    IDS = np.load('../data/numpy_ids.npy')
+    Xtr, Ytr, IDStr, Xtest, Ytest, IDStest = prepare_sets(X, Y, IDS, TRAINING_SIZE, TESTING_SIZE)
+    print('Shape of Xtr', Xtr.shape)
+    print('Shape of Ytr', Ytr.shape)

@@ -1,6 +1,6 @@
 posters/
 .ipynb_checkpoints/
-moviegenre/__pycache__/
+!**/__pycache__/
 
 data/all_clean_genres.npy
 data/all_clean_ids.npy

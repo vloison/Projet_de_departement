@@ -1,4 +1,8 @@
+# -*- coding: utf-8 -*-
 """Preprocesses the input data"""
+from utils.preprocessing import read_csv_with_genres, get_id, normalize
+from utils.constants import GENRES_DICT, CLEAN_MOVIES_PATH, SAVELOCATION, SIZE
+
 from pathlib import Path
 import imageio
 import skimage.transform
@@ -8,65 +12,38 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 
-SAVELOCATION = '../data/posters/'
-MOVIES = pd.read_csv('../data/clean_poster_data.csv', index_col=0)
-
-
-def get_id(path):
-    """Gets the id from the Pathlib path"""
-    filename = path.parts[-1]
-    index_f = filename.rfind(".jpg")
-    return int(filename[:index_f])
-
-
-def show_img(dataset, posters, labels, ids, index):
-    """Shows the image with id at index position in ids"""
-    title = dataset.at[ids[index], 'title']
-    genre = dataset.at[ids[index], 'genre_1']+', '+str(ids[index])
-#     genres = [dataset.at[ids[index],'genre_'+i] for i in ['1','2','3']]
-    plt.imshow(posters[index])
-    plt.title('{} \n {}'.format(title, genre))
-    plt.show()
-
-
-def preprocess(img, size=(150, 100, 3)):
-    """Normalizes the image"""
-    img = skimage.transform.resize(img, size)
-    img = img.astype(np.float32)
-#     img = (img / 127.5) -1
-    return img
-
 
 def prepare_data(dir_path, dataset, size=(150, 100, 3), save=True):
     """Generates the data to be used by the neural network"""
     print('Generating dataset...')
 
-    genre_list = dataset.genre_1.unique()
-    nb_genres = len(genre_list)
-    inv_genre = {genre_list[k]: k for k in range(nb_genres)}
+    nb_genres = len(GENRES_DICT)
     image_glob = Path(dir_path).glob("*.jpg")
     posters, genres, ids = [], [], []
     for path in tqdm(sorted(image_glob)):
         try:
             # Meilleure gestion d'erreur à faire
-            posters.append(preprocess(imageio.imread(path), size))
+            posters.append(normalize(imageio.imread(path), size))
             index = get_id(path)
             vect_genre = np.zeros(nb_genres, dtype=int)
             # Rajoute un 1 à l'indice correspondant à la position
             # du premier genre de ce film dans la liste des genres
-            vect_genre[inv_genre[dataset.at[index, 'genre_1']]] = 1
+            for genre_name in dataset.at[index, 'genres']:
+                vect_genre[GENRES_DICT[genre_name]] = 1
             genres.append(vect_genre)
             ids.append(index)
         except Exception as e:
             print("Erreur", e)
     if save:
         np.save('../data/numpy_posters.npy', posters)
-        np.save('../data/numpy_genres', genres)
-        np.save('../data/numpy_ids', ids)
+        np.save('../data/numpy_genres.npy', genres)
+        np.save('../data/numpy_ids.npy', ids)
     print('Done.')
     return posters, genres, ids
 
 
 if __name__ == "__main__":
-    X, Y, IDS = prepare_data(SAVELOCATION, MOVIES)
-    show_img(MOVIES, X, Y, IDS, 13)
+    # MOVIES = read_csv_with_genres(CLEAN_MOVIES_PATH)
+    # X, Y, IDS = prepare_data(SAVELOCATION, MOVIES, SIZE)
+    X, Y, IDS = np.load('../data/numpy_posters.npy'), np.load('../data/numpy_genres.npy'), np.load('../data/numpy_ids.npy')
+    print(X.shape, Y.shape, IDS.shape)
