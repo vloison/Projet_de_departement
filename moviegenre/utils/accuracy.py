@@ -11,6 +11,7 @@ def mono_label(Y_real, Y_pred):
 def multi_label(Y_real, Y_pred):
     return np.sum(np.logical_and(Y_real, Y_pred))/np.sum(np.logical_or(Y_real, Y_pred))
 
+
 def notebook(y_test, pred):
     value = 0
     for i in range(0, len(pred)):

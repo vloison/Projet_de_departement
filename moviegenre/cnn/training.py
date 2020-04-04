@@ -7,13 +7,12 @@ from cnn.model import create_model
 from utils import accuracy, display
 
 
-
 def train_model(
         Xtr_path, Ytr_path,
         Xtest_path, Ytest_path,
         nb_epochs=1,
         model_path=None, save_path=None,
-        verbose=True
+        verbose=True, show_display=False
 ):
 
     Xtr = np.load(Xtr_path)
@@ -22,7 +21,7 @@ def train_model(
     Xtest = np.load(Xtest_path)
     Ytest = np.load(Ytest_path)
 
-    if model_path is None :
+    if model_path is None:
         model = create_model()
         model.fit(Xtr, Ytr, batch_size=16, epochs=nb_epochs, verbose=verbose, validation_split=0.1)
     else:
@@ -35,6 +34,6 @@ def train_model(
 
     print("Accuracy on testing set:", accuracy.notebook(Ytest, Ypred))
 
-    #if verbose:
-        #display.plot_test_results(Xtest, Ytest, Ypred, 30, 5, 3)
-        #plt.show()
+    if show_display:
+        display.plot_test_results(Xtest, Ytest, Ypred, 30, 5, 3)
+        plt.show()
