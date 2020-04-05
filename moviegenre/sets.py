@@ -156,6 +156,6 @@ if __name__ == '__main__':
     Xtr, Ytr, IDStr, Xtest, Ytest, IDStest = prepare_unif_sets(MOVIES, X, Y, IDS, TRAINING_SIZE, TESTING_SIZE)
     print('Shape of Xtr', Xtr.shape)
     print('Shape of Ytr', Ytr.shape)
-    show_img(MOVIES, Xtr, Ytr, IDStr, 0)
+    # show_img(MOVIES, Xtr, Ytr, IDStr, 0)
     print(Ytr[0])
     
