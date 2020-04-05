@@ -43,6 +43,6 @@ def prepare_data(dir_path, dataset, size=(150, 100, 3), save=True):
 
 if __name__ == "__main__":
     MOVIES = read_csv_with_genres(CLEAN_MOVIES_PATH)
-    #X, Y, IDS = prepare_data(SAVELOCATION, MOVIES, SIZE)
-    X, Y, IDS = np.load('../data/numpy_posters.npy'), np.load('../data/numpy_genres.npy'), np.load('../data/numpy_ids.npy')
+    X, Y, IDS = prepare_data(SAVELOCATION, MOVIES, SIZE)
+    #X, Y, IDS = np.load('../data/numpy_posters.npy'), np.load('../data/numpy_genres.npy'), np.load('../data/numpy_ids.npy')
     print(X.shape, Y.shape, IDS.shape)

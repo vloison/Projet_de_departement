@@ -123,4 +123,4 @@ if __name__ == '__main__':
                          index_col='allocine_id')
     MOVIES = prepare_dataset(RAW_MOVIES)
     MOVIES.to_csv(CLEAN_MOVIES_PATH)
-    #database_download(SAVELOCATION, MOVIES)
+    database_download(SAVELOCATION, MOVIES)

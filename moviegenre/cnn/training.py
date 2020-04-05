@@ -33,8 +33,9 @@ def train_model(
 
     Ypred = model.predict(Xtest)
 
-    print("Accuracy on testing set:", accuracy.notebook(Ytest, Ypred))
-
+    print("Accuracy on testing set:", accuracy.multi_label(Ytest, Ypred))
+    
+    return Ypred
     #if verbose:
         #display.plot_test_results(Xtest, Ytest, Ypred, 30, 5, 3)
         #plt.show()
