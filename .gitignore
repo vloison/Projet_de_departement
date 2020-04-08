@@ -10,7 +10,6 @@ data/all_clean_posters.npy
 data/numpy_genres.npy
 data/numpy_ids.npy
 data/numpy_posters.npy
-
-moviegenre/keras_yolo/model_data/
+logs/
 
 

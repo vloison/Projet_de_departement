@@ -1,50 +1,10 @@
 # -*- coding: utf-8 -*-
 """Downloads the posters and cleans the database"""
-from utils.constants import SAVELOCATION, MOVIES_PATH, CLEAN_MOVIES_PATH, FIRST_DATE, LAST_DATE
-
 from pathlib import Path
 from urllib.request import urlretrieve
 import pandas as pd
-from tqdm import tqdm  # barre de chargement
-import requests
+from tqdm import tqdm
 import numpy as np
-
-
-
-def url_exist(dataset, verbose=True):
-    not_found = []
-    length = len(dataset)
-    for index, row in tqdm(dataset.iterrows(), total=length):
-        r = requests.head(row.poster)
-        if r.status_code != requests.codes.ok:
-            not_found.append(index)
-    if verbose:
-        print('URLS NOT FOUND:', not_found)
-    return not_found
-
-
-def database_download(savelocation, dataset, nb=None):
-    """Downloads the database from the given links in the dataset"""
-    path = Path(savelocation)
-    if not path.exists():
-        path.mkdir()
-    not_found = []
-    print('Posters database downloading')
-    generator = dataset.iterrows() if nb is None else dataset.head(
-        n=nb).iterrows()
-    length = len(dataset) if nb is None else nb
-    for index, row in tqdm(generator, total=length):
-        current_name = str(index)+'.jpg'
-        jpgname = path / current_name
-        try:
-            if not Path(jpgname).is_file():
-                urlretrieve(row.poster, str(Path(jpgname)))
-        except Exception as e:
-            print(e)
-            not_found.append(index)
-    print('Database downloaded')
-    print(not_found)
-    return not_found
 
 
 def genre_count(movies, genre_column):
@@ -55,7 +15,7 @@ def genre_count(movies, genre_column):
     print(len(movies[genre_column].unique()), '\n')
 
 
-def replace_genres(movies):
+def replace_genres(movies, genres):
     """Replace genres"""
     movies = movies.drop(movies[movies['genre_1'].isin(
         ['Classique', 'Concert', 'Opera', 'Famille', 'Divers', 'Erotique',
@@ -92,35 +52,59 @@ def replace_genres(movies):
     return movies
 
 
-def prepare_dataset(raw_movies, verbose=True):
+def clean_database(movies_path, genres, start=None, end=None, verbose=True, logger=None):
     """Prepare dataset"""
+    raw_movies = pd.read_csv(movies_path, sep=',',
+                         index_col='allocine_id')
     movies = raw_movies[['title', 'genre_1', 'genre_2', 'genre_3',
                          'release_date', 'pays', 'poster']].dropna(
                         subset=['title', 'genre_1', 'poster', 'release_date'])
-    movies.drop(movies[LAST_DATE < movies['release_date'].map(
+    if end is not None:
+        movies.drop(movies[end < movies['release_date'].map(
         pd.Timestamp)].index, inplace=True)
-    movies.drop(movies[FIRST_DATE > movies['release_date'].map(
-        pd.Timestamp)].index, inplace=True)
-
-#     NOT_FOUND = url_exist(movies, verbose)
-#     movies = movies.drop(movies.index[NOT_FOUND])
-    movies = replace_genres(movies)
+    if start is not None:
+        movies.drop(movies[start > movies['release_date'].map(
+            pd.Timestamp)].index, inplace=True)
+    movies = replace_genres(movies, genres)
     movies['genres'] = movies[['genre_1', 'genre_2', 'genre_3']].apply(
         lambda x: ';'.join(x.dropna().astype(str)),
         axis=1
     ).str.split(';')
-    genre_count(movies, 'genre_1')
-    genre_count(movies, 'genre_2')
-    genre_count(movies, 'genre_3')
+    
+    if verbose:
+        genre_count(movies, 'genre_1')
+        genre_count(movies, 'genre_2')
+        genre_count(movies, 'genre_3')
+
     for _, row in movies.iterrows():
         row.genres = np.unique(row.genres)
     movies.drop(['genre_1', 'genre_2', 'genre_3'], axis=1, inplace=True)
     return movies
 
 
-if __name__ == '__main__':
-    RAW_MOVIES = pd.read_csv(MOVIES_PATH, sep=',',
-                         index_col='allocine_id')
-    MOVIES = prepare_dataset(RAW_MOVIES)
-    MOVIES.to_csv(CLEAN_MOVIES_PATH)
-    database_download(SAVELOCATION, MOVIES)
+def download_database(savelocation, dataset, nb=None, verbose=True, logger=None):
+    """Downloads the database from the given links in the dataset"""
+    path = Path(savelocation)
+    if not path.exists():
+        path.mkdir()
+    not_found = []
+    if verbose:
+        print('Posters database downloading')
+    generator = dataset.iterrows() if nb is None else dataset.head(
+        n=nb).iterrows()
+    if verbose:
+        length = len(dataset) if nb is None else nb
+        generator = tqdm(generator, total=length)
+    for index, row in generator:
+        current_name = str(index)+'.jpg'
+        jpgname = path / current_name
+        try:
+            if not Path(jpgname).is_file():
+                urlretrieve(row.poster, str(Path(jpgname)))
+        except Exception as e:
+            if verbose:
+                print('Error {} with film {}'.format(e, index))
+            not_found.append(index)
+    if verbose:
+        print('Database downloaded')
+    return not_found

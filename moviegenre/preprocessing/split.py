@@ -1,17 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-In this file, we create training and testing sets and save them.
+Split data into training set and testing set.
 """
 import numpy as np
-import pandas as pd
-from utils.preprocessing import read_csv_with_genres
-from utils.constants import TRAINING_SIZE, TESTING_SIZE, GENRES_DICT, CLEAN_MOVIES_PATH, SIZE
-from utils.display import show_img
-
-# Definition of the training and testing sets
 
 
-def prepare_unif_sets(database, X, Y, IDS, training_size, testing_size):
+def prepare_unif_sets(database, X, Y, IDS, GENRES_DICT, training_size, testing_size):
     nb_genres = len(GENRES_DICT)
     IDStr = []
     IDStest = []
@@ -49,13 +43,11 @@ def prepare_unif_sets(database, X, Y, IDS, training_size, testing_size):
             tab_genre = tab_genre.sample(n=new_size)
             IDStr += list(tab_genre.index)
     new_tr_size = len(IDStr)
-    
     # On complète le training_set pour qu'il ait la bonne taille:
     if len(IDStr) < training_size:
         train_candidates = database.drop(database[database.index.isin(
                 IDStr + IDStest)].index)
         IDStr += list(train_candidates.sample(n=training_size-len(IDStr)).index)    
-    
     # On complète le testing_set pour qu'il ait la bonne taille
     test_candidates = database.drop(database[database.index.isin(
             IDStr + IDStest)].index)
@@ -79,31 +71,6 @@ def prepare_unif_sets(database, X, Y, IDS, training_size, testing_size):
     for i in range(len(IDStest)):
         Xtest[i] = X[np.argwhere(IDS == IDStest[i])]
         Ytest[i] = Y[np.argwhere(IDS == IDStest[i])]
-
-    np.save(
-        '../data/sets/unif_Xtr_tr={}_test={}.npy'.format(training_size, testing_size),
-        Xtr
-    )
-    np.save(
-        '../data/sets/unif_Ytr_tr={}_test={}.npy'.format(training_size, testing_size),
-        Ytr
-            )
-    np.save(
-        '../data/sets/unif_IDStr_tr={}_test={}.npy'.format(training_size, testing_size),
-        IDStr
-    )
-    np.save(
-        '../data/sets/unif_Xtest_tr={}_test={}.npy'.format(training_size, testing_size),
-        Xtest
-    )
-    np.save(
-        '../data/sets/unif_Ytest_tr={}_test={}.npy'.format(training_size, testing_size),
-        Ytest
-    )
-    np.save(
-        '../data/sets/unif_IDStest_tr={}_test={}.npy'.format(training_size, testing_size),
-        IDStest
-    )
     return Xtr, Ytr, IDStr, Xtest, Ytest, IDStest
 
 
@@ -117,45 +84,9 @@ def prepare_sets(X, Y, IDS, training_size, testing_size):
     Xtest = X[permutation[training_size:training_size+testing_size]]
     Ytr = Y[permutation[:training_size]]
     Ytest = Y[permutation[training_size:training_size+testing_size]]
-
-    np.save(
-        '../data/sets/Xtr_tr={}_test={}.npy'.format(training_size, testing_size),
-        Xtr
-    )
-    np.save(
-        '../data/sets/Ytr_tr={}_test={}.npy'.format(training_size, testing_size),
-        Ytr
-            )
-    np.save(
-        '../data/sets/IDStr_tr={}_test={}.npy'.format(training_size, testing_size),
-        IDStr
-    )
-    np.save(
-        '../data/sets/Xtest_tr={}_test={}.npy'.format(training_size, testing_size),
-        Xtest
-    )
-    np.save(
-        '../data/sets/Ytest_tr={}_test={}.npy'.format(training_size, testing_size),
-        Ytest
-    )
-    np.save(
-        '../data/sets/IDStest_tr={}_test={}.npy'.format(training_size, testing_size),
-        IDStest
-    )
     return Xtr, Ytr, IDStr, Xtest, Ytest, IDStest
 
 
-if __name__ == '__main__':
-    MOVIES = read_csv_with_genres(CLEAN_MOVIES_PATH)
-    # Load data
-    X = np.load('../data/numpy_posters.npy')
-    print("Shape of X:", X.shape)
-    Y = np.load('../data/numpy_genres.npy')
-    print("Shape of Y", Y.shape)
-    IDS = np.load('../data/numpy_ids.npy')
-    Xtr, Ytr, IDStr, Xtest, Ytest, IDStest = prepare_unif_sets(MOVIES, X, Y, IDS, TRAINING_SIZE, TESTING_SIZE)
-    print('Shape of Xtr', Xtr.shape)
-    print('Shape of Ytr', Ytr.shape)
-    # show_img(MOVIES, Xtr, Ytr, IDStr, 0)
-    print(Ytr[0])
-    
+def split_data(databse, posters, genres, ids, genres_dict, training_size, testing_size, split_method, verbose=True, logger=None):
+    if split_method == 'uniform': return prepare_unif_sets(database, posters, genres, ids, genres_dict, training_size, testing_size)
+    return prepare_sets(posters, genres, ids, training_size, testing_size)
