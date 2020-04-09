@@ -11,8 +11,9 @@ from utils.misc import list_to_date, triplet_to_str, read_csv_with_genres, creat
 from tensorflow.keras.models import load_model
 import numpy as np
 
+
 def main(args):
-    config = yaml.safe_load(open(args.config))    
+    config = yaml.safe_load(open(args.config))
     # Naming files
     nb_genres = len(config['genres'])
     start = list_to_date(config['first_date'])
@@ -26,36 +27,33 @@ def main(args):
     selection_name = args.csv+selection_name+'.csv'
     appendix_data += '.npy'
     model_name = args.models_dir + model_name + '.h5'
-    
-    
+
     if Path(selection_name).exists():
         if args.verbose:
             print('Database already cleaned')
         selected_movies = read_csv_with_genres(Path(selection_name))
     else:
         selected_movies = clean_database(Path(args.database), config['genres'],
-                                       start=start, end=end,
-                                       verbose=args.verbose, logger=logger)
+                                         start=start, end=end,
+                                         verbose=args.verbose, logger=logger)
         if args.save:
             selected_movies.to_csv(Path(selection_name))
-    not_found = download_database(Path(args.posters), selected_movies, 
+    not_found = download_database(Path(args.posters), selected_movies,
                                   verbose=args.verbose, logger=logger)
-    
-    
+
     data_name = [Path(prefix+appendix_data) for prefix in [args.preproc+'x_', args.preproc+'y_', args.preproc+'id_']]
     if data_name[0].exists() and data_name[1].exists() and data_name[2].exists():
         if args.verbose:
             print('Data already preprocessed')
         posters, genres, ids = np.load(data_name[0]), np.load(data_name[1]), np.load(data_name[2])
     else:
-        posters, genres, ids = preprocess_data(Path(args.posters), selected_movies, config['genres'], config['image_size'], 
-                                           verbose=args.verbose, logger=logger)
+        posters, genres, ids = preprocess_data(Path(args.posters), selected_movies, config['genres'],
+                                               config['image_size'], verbose=args.verbose, logger=logger)
         if args.save:
             np.save(data_name[0], posters)
             np.save(data_name[1], genres)
             np.save(data_name[2], ids)
-    
-    
+
     data_name = [Path(prefix+appendix_data) for prefix in [args.split+'xtr_', args.split+'ytr_', args.split+'idtr_', args.split+'xtest_', args.split+'ytest_', args.split+'idtest_']]
     if data_name[0].exists() and data_name[1].exists() and data_name[2].exists() and data_name[3].exists() and data_name[4].exists() and data_name[5].exists():
         if args.verbose:
@@ -72,8 +70,8 @@ def main(args):
             np.save(data_name[3], test_posters)
             np.save(data_name[4], test_genres)
             np.save(data_name[5], test_ids)
-    
-    
+
+
 
     if Path(model_name).exists():
         if args.verbose:
@@ -85,7 +83,7 @@ def main(args):
                         verbose=args.verbose, logger=logger)
         if args.save:
             model.save(str(Path(model_name)))
-    
+
     predicted_genres = model.predict(test_posters)
     print(multi_label(test_genres, predicted_genres, logger=logger))
     return model, test_posters, test_genres, test_ids, selected_movies, predicted_genres

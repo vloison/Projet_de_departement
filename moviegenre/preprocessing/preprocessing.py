@@ -26,16 +26,13 @@ def normalize(img, size):
 def preprocess_data(dir_path, dataset, genres_dict, size, verbose=True, logger=None):
     """Generates the data to be used by the neural network"""
     nb_genres = len(genres_dict)
+    generator = dataset.iterrows()
     if verbose:
         print('Generating dataset...')
-    image_glob = Path(dir_path).glob("*.jpg")
+        generator = tqdm(generator, total=len(dataset))
     posters, genres, ids = [], [], []
-    if verbose:
-        path_list = tqdm(sorted(image_glob))
-    else:
-        path_list = sorted(image_glob)
-    for path in path_list:
-        index = get_id(path)
+    for index, row in generator:
+        path = dir_path/(str(index)+'.jpg')
         try:
             # MEILLEURE GESTION D'ERREUR À FAIRE
             posters.append(normalize(imageio.imread(path), size))
