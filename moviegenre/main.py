@@ -25,7 +25,7 @@ def main(args):
     logger = None #create_logger(name=model_name, log_dir=Path(args.log_dir))
     selection_name = args.csv+selection_name+'.csv'
     appendix_data += '.npy'
-    model_name += '.h5'
+    model_name = args.models_dir + model_name + '.h5'
     
     
     if Path(selection_name).exists():
@@ -97,6 +97,7 @@ if __name__ == '__main__':
     parser.add_argument('--config', help='Path to the config file', default='./default_config.yml')
     parser.add_argument('--log-dir', help='Path to the log directory', default='../log/')
     parser.add_argument('--posters', help='Path to the posters', default='../data/posters/')
+    parser.add_argument('--models-dir', help='Path to the saved models', default='../data/models/')
     parser.add_argument('--preproc', help='Path to the preprocessed data', default='../data/preprocessed/')
     parser.add_argument('--split', help='Path to the splitted data', default='../data/splitted/')
     parser.add_argument('--database', help='Path to the databse csv', default='../data/poster_data.csv')
