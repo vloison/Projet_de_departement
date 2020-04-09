@@ -88,7 +88,7 @@ def main(args):
     
     predicted_genres = model.predict(test_posters)
     print(multi_label(test_genres, predicted_genres, logger=logger))
-    return
+    return model, test_posters, test_genres, test_ids, selected_movies, predicted_genres
 
 
 
