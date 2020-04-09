@@ -6,6 +6,7 @@ import numpy as np
 
 
 def prepare_unif_sets(database, X, Y, IDS, GENRES_DICT, training_size, testing_size):
+    print(X.shape, Y.shape, IDS.shape, len(GENRES_DICT), training_size, testing_size)
     nb_genres = len(GENRES_DICT)
     IDStr = []
     IDStest = []
@@ -47,6 +48,7 @@ def prepare_unif_sets(database, X, Y, IDS, GENRES_DICT, training_size, testing_s
     if len(IDStr) < training_size:
         train_candidates = database.drop(database[database.index.isin(
                 IDStr + IDStest)].index)
+        print(len(IDStr), training_size, len(train_candidates))
         IDStr += list(train_candidates.sample(n=training_size-len(IDStr)).index)    
     # On complète le testing_set pour qu'il ait la bonne taille
     test_candidates = database.drop(database[database.index.isin(
@@ -59,11 +61,11 @@ def prepare_unif_sets(database, X, Y, IDS, GENRES_DICT, training_size, testing_s
     np.random.shuffle(IDStest)
     print('taille de IDStr', IDStr.shape)
     print('taille de IDStest', IDStest.shape)
-
+    
     # On construit les listes de données et labels à partir des listes d'IDS
-    Xtr = np.zeros((len(IDStr), SIZE[0], SIZE[1], SIZE[2]))
+    Xtr = np.zeros((len(IDStr), X.shape[1], X.shape[2], X.shape[3]))
     Ytr = np.zeros((len(IDStr), len(GENRES_DICT)))
-    Xtest = np.zeros((len(IDStest), SIZE[0], SIZE[1], SIZE[2]))
+    Xtest = np.zeros((len(IDStest), X.shape[1], X.shape[2], X.shape[3]))
     Ytest = np.zeros((len(IDStest), len(GENRES_DICT)))
     for i in range(len(IDStr)):
         Xtr[i] = X[np.argwhere(IDS == IDStr[i])]
@@ -87,6 +89,6 @@ def prepare_sets(X, Y, IDS, training_size, testing_size):
     return Xtr, Ytr, IDStr, Xtest, Ytest, IDStest
 
 
-def split_data(databse, posters, genres, ids, genres_dict, training_size, testing_size, split_method, verbose=True, logger=None):
+def split_data(database, posters, genres, ids, genres_dict, training_size, testing_size, split_method, verbose=True, logger=None):
     if split_method == 'uniform': return prepare_unif_sets(database, posters, genres, ids, genres_dict, training_size, testing_size)
     return prepare_sets(posters, genres, ids, training_size, testing_size)

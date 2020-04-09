@@ -23,8 +23,9 @@ def normalize(img, size):
     return img
 
 
-def preprocess_data(dir_path, dataset, nb_genres, size, verbose=True, logger=None):
+def preprocess_data(dir_path, dataset, genres_dict, size, verbose=True, logger=None):
     """Generates the data to be used by the neural network"""
+    nb_genres = len(genres_dict)
     if verbose:
         print('Generating dataset...')
     image_glob = Path(dir_path).glob("*.jpg")

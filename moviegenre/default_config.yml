@@ -27,7 +27,7 @@ last_date:
 split_method:
     uniform
 training_size:
-    20000
+    2000
 testing_size:
     100
 nb_epochs:

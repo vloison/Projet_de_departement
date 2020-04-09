@@ -8,7 +8,7 @@ def mono_label(Y_real, Y_pred):
     return (label_real == label_pred).mean()
 
 
-def multi_label(Y_real, Y_pred):
+def multi_label(Y_real, Y_pred, logger=None):
     return np.sum(np.logical_and(Y_real, Y_pred))/np.sum(np.logical_or(Y_real, Y_pred))
 
 
