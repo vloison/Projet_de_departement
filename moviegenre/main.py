@@ -13,7 +13,7 @@ import numpy as np
 
 
 def main(args):
-    config = yaml.safe_load(open(args.config))
+    config = yaml.safe_load(open(args.config, encoding='utf-8'))
     # Naming files
     nb_genres = len(config['genres'])
     start = list_to_date(config['first_date'])
