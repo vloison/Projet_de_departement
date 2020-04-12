@@ -21,7 +21,7 @@ def main(args):
     selection_name = triplet_to_str(config['first_date'])+'_'+triplet_to_str(config['last_date'])+'_'+str(nb_genres)
     appendix_data = triplet_to_str(config['image_size']) + '_' + selection_name
     appendix_split = config['split_method']+'_tr{}t{}_'.format(config['training_size'], config['testing_size'])+appendix_data
-    model_name = 'cnn1_e{}b{}v{}_'.format(config['nb_epochs'], config['batch_size'], config['validation_split'])
+    model_name = config['model_name']+'_e{}b{}v{}_'.format(config['nb_epochs'], config['batch_size'], config['validation_split'])
     model_name += appendix_split
     logger = None #create_logger(name=model_name, log_dir=Path(args.log_dir))
     selection_name = args.csv+selection_name+'.csv'
