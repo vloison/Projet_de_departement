@@ -3,6 +3,7 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Dense, Dropout, Flatten
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, BatchNormalization
 from tensorflow.keras.optimizers import Adagrad
+from tensorflow.keras.metrics import categorical_accuracy
 
 
 def standard_layer(conv1_dim, conv2_dim, input):
@@ -28,7 +29,11 @@ def create_cnn_v1(nb_genres, size):
 
     model = Model(inputs=[input_poster], outputs=output)
 
-    model.compile(loss="binary_crossentropy", optimizer=Adagrad(), metrics=["accuracy"])
+    model.compile(
+        loss="binary_crossentropy",
+        optimizer=Adagrad(),
+        metrics=["accuracy", categorical_accuracy]
+    )
 
     return model
 

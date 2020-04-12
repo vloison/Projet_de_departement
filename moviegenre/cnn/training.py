@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import numpy as np
 from cnn.model import create_cnn_v1
 
 
@@ -10,6 +11,14 @@ def train_model(
 ):
 
     model = create_cnn_v1(nb_genres, image_size)
-    training_history = model.fit(training_posters, training_genres, batch_size=batch_size, epochs=nb_epochs,
-              verbose=verbose, validation_split=validation_split)
+
+    class_weights = np.ones(nb_genres) / training_genres.sum(axis=0)
+    class_weights = dict(enumerate(class_weights))
+
+    training_history = model.fit(
+        training_posters, training_genres,
+        batch_size=batch_size, epochs=nb_epochs, validation_split=validation_split,
+        class_weight=class_weights,
+        verbose=verbose)
+
     return model, training_history
