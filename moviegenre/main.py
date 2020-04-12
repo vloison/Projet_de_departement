@@ -71,22 +71,24 @@ def main(args):
             np.save(data_name[4], test_genres)
             np.save(data_name[5], test_ids)
 
-
-
     if Path(model_name).exists():
         if args.verbose:
             print('Model already trained')
         model = load_model(str(Path(model_name)))
+        training_history = None
     else:
-        model = train_model(train_posters, train_genres, nb_genres, config['image_size'], nb_epochs=config['nb_epochs'],
-                        batch_size = config['batch_size'], validation_split = config['validation_split'],
-                        verbose=args.verbose, logger=logger)
+        model, training_history = train_model(
+            train_posters, train_genres, nb_genres, config['image_size'],
+            nb_epochs=config['nb_epochs'], batch_size=config['batch_size'],
+            validation_split=config['validation_split'],
+            verbose=args.verbose, logger=logger
+        )
         if args.save:
             model.save(str(Path(model_name)))
 
     predicted_genres = model.predict(test_posters)
     print(multi_label(test_genres, predicted_genres, logger=logger))
-    return model, test_posters, test_genres, test_ids, selected_movies, predicted_genres
+    return model, test_posters, test_genres, test_ids, selected_movies, predicted_genres, training_history
 
 
 if __name__ == '__main__':

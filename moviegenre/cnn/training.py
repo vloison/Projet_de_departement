@@ -10,6 +10,6 @@ def train_model(
 ):
 
     model = create_cnn_v1(nb_genres, image_size)
-    model.fit(training_posters, training_genres, batch_size=batch_size, epochs=nb_epochs,
+    training_history = model.fit(training_posters, training_genres, batch_size=batch_size, epochs=nb_epochs,
               verbose=verbose, validation_split=validation_split)
-    return model
+    return model, training_history
