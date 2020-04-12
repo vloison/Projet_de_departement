@@ -13,7 +13,7 @@ import numpy as np
 
 
 def main(args):
-    config = yaml.safe_load(open(args.config))
+    config = yaml.safe_load(open(args.config, encoding='utf-8'))
     # Naming files
     nb_genres = len(config['genres'])
     start = list_to_date(config['first_date'])
@@ -21,7 +21,7 @@ def main(args):
     selection_name = triplet_to_str(config['first_date'])+'_'+triplet_to_str(config['last_date'])+'_'+str(nb_genres)
     appendix_data = triplet_to_str(config['image_size']) + '_' + selection_name
     appendix_split = config['split_method']+'_tr{}t{}_'.format(config['training_size'], config['testing_size'])+appendix_data
-    model_name = 'cnn1_e{}b{}v{}_'.format(config['nb_epochs'], config['batch_size'], config['validation_split'])
+    model_name = config['model_name']+'_e{}b{}v{}_'.format(config['nb_epochs'], config['batch_size'], config['validation_split'])
     model_name += appendix_split
     logger = None #create_logger(name=model_name, log_dir=Path(args.log_dir))
     selection_name = args.csv+selection_name+'.csv'
@@ -54,7 +54,7 @@ def main(args):
             np.save(data_name[1], genres)
             np.save(data_name[2], ids)
 
-    data_name = [Path(prefix+appendix_data) for prefix in [args.split+'xtr_', args.split+'ytr_', args.split+'idtr_', args.split+'xtest_', args.split+'ytest_', args.split+'idtest_']]
+    data_name = [Path(prefix+appendix_split) for prefix in [args.split+'xtr_', args.split+'ytr_', args.split+'idtr_', args.split+'xtest_', args.split+'ytest_', args.split+'idtest_']]
     if data_name[0].exists() and data_name[1].exists() and data_name[2].exists() and data_name[3].exists() and data_name[4].exists() and data_name[5].exists():
         if args.verbose:
             print('Data already splitted')
@@ -71,23 +71,24 @@ def main(args):
             np.save(data_name[4], test_genres)
             np.save(data_name[5], test_ids)
 
-
-
     if Path(model_name).exists():
         if args.verbose:
             print('Model already trained')
         model = load_model(str(Path(model_name)))
+        training_history = None
     else:
-        model = train_model(train_posters, train_genres, nb_genres, config['image_size'], nb_epochs=config['nb_epochs'],
-                        batch_size = config['batch_size'], validation_split = config['validation_split'],
-                        verbose=args.verbose, logger=logger)
+        model, training_history = train_model(
+            train_posters, train_genres, nb_genres, config['image_size'],
+            nb_epochs=config['nb_epochs'], batch_size=config['batch_size'],
+            validation_split=config['validation_split'],
+            verbose=args.verbose, logger=logger
+        )
         if args.save:
             model.save(str(Path(model_name)))
 
     predicted_genres = model.predict(test_posters)
     print(multi_label(test_genres, predicted_genres, logger=logger))
-    return model, test_posters, test_genres, test_ids, selected_movies, predicted_genres
-
+    return model, test_posters, test_genres, test_ids, selected_movies, predicted_genres, training_history
 
 
 if __name__ == '__main__':
