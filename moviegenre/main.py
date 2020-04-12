@@ -54,7 +54,7 @@ def main(args):
             np.save(data_name[1], genres)
             np.save(data_name[2], ids)
 
-    data_name = [Path(prefix+appendix_data) for prefix in [args.split+'xtr_', args.split+'ytr_', args.split+'idtr_', args.split+'xtest_', args.split+'ytest_', args.split+'idtest_']]
+    data_name = [Path(prefix+appendix_split) for prefix in [args.split+'xtr_', args.split+'ytr_', args.split+'idtr_', args.split+'xtest_', args.split+'ytest_', args.split+'idtest_']]
     if data_name[0].exists() and data_name[1].exists() and data_name[2].exists() and data_name[3].exists() and data_name[4].exists() and data_name[5].exists():
         if args.verbose:
             print('Data already splitted')
