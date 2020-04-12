@@ -4,13 +4,13 @@ posters/
 .idea/
 venv/
 
-data/clean_poster_data.csv
 data/all_clean_genres.npy
 data/all_clean_ids.npy
 data/all_clean_posters.npy
+data/sets/
 
 data/numpy_genres.npy
 data/numpy_ids.npy
 data/numpy_posters.npy
 
-moviegenre/keras_yolo/model_data/
+logs/

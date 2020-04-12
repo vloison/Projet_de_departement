@@ -3,8 +3,6 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Dense, Dropout, Flatten
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, BatchNormalization
 from tensorflow.keras.optimizers import Adagrad
-from utils.constants import GENRES_DICT, SIZE
-from utils.accuracy import multi_label
 
 
 def standard_layer(conv1_dim, conv2_dim, input):
@@ -16,8 +14,8 @@ def standard_layer(conv1_dim, conv2_dim, input):
     return output
 
 
-def create_model():
-    input_poster = Input(shape=(SIZE[0], SIZE[1], 3))
+def create_cnn_v1(nb_genres, size):
+    input_poster = Input(shape=size)
 
     output = standard_layer(32, 64, input_poster)
 
@@ -26,10 +24,11 @@ def create_model():
     output = Flatten()(output)
     output = Dense(128, activation="relu")(output)
     output = Dropout(0.5)(output)
-    output = Dense(len(GENRES_DICT), activation="sigmoid")(output)
+    output = Dense(nb_genres, activation="sigmoid")(output)
 
     model = Model(inputs=[input_poster], outputs=output)
 
-    model.compile(loss="binary_crossentropy", optimizer=Adagrad(), metrics=[multi_label])
+    model.compile(loss="binary_crossentropy", optimizer=Adagrad(), metrics=["accuracy"])
 
     return model
+

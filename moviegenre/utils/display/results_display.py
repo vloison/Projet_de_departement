@@ -10,7 +10,7 @@ def show_img(dataset, posters, labels, ids, index):
     plt.imshow(posters[index])
     plt.title('{} \n {}'.format(title, genre))
     plt.show()
-    
+
 
 def plot_image(i, img, true_label, class_names, predictions_array):
     predictions_array, true_label, img = predictions_array[i], true_label[i], img[i]
