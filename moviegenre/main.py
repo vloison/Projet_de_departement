@@ -89,7 +89,6 @@ def main(args):
     return model, test_posters, test_genres, test_ids, selected_movies, predicted_genres
 
 
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', help='Path to the config file', default='./default_config.yml')
