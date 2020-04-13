@@ -1,6 +1,8 @@
 posters/
 .ipynb_checkpoints/
-!**/__pycache__/
+**/__pycache__/
+.idea/
+venv/
 
 data/all_clean_genres.npy
 data/all_clean_ids.npy
@@ -10,5 +12,5 @@ data/sets/
 data/numpy_genres.npy
 data/numpy_ids.npy
 data/numpy_posters.npy
-logs/
 
+logs/
