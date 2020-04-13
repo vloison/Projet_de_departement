@@ -39,7 +39,7 @@ def prepare_unif_sets(database, X, Y, IDS, GENRES_DICT, training_size, testing_s
     # Deuxième boucle pour les genres de cardinal suffisant.
     # Si un genre n'a pas un cardinal suffisant par rapport à la nouvelle
     # taille, on lui applique le même traitement qu'à la boucle précédente.
-    new_size = int((training_size - len(IDStr))/len(restants)) + 1
+    new_size = int((training_size - len(IDStr))/len(restants))
     for k in restants:
         print(k)
         tab_genre = database[database['genres'].astype(str).str.contains(k, case=False)]
