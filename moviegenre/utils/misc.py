@@ -2,6 +2,8 @@
 import pandas as pd
 import logging
 import os
+import numpy as np
+import cv2
 
 
 def read_csv_with_genres(file_name):
@@ -19,6 +21,27 @@ def list_to_date(l):
 
 def triplet_to_str(l):
     return '{}-{}-{}'.format(l[0], l[1], l[2])
+
+def numpy_image_to_cv2(RGB_image):
+    """ As numpy uses RGB with pixel values in [0,1] and cv2 uses BRG with values in [0,256],
+    this function converts a numpy image to a cv2 image
+
+    Parameters
+    ----------
+    RGB_image : numpy image
+
+    Returns
+    -------
+        np.array to be exploted by cv2
+
+    """
+    # BRG_image = np.zeros(RGB_image.shape, dtype=int)
+    # BRG_image[:, :, 0] = RGB_image[:, :, 2]#np.floor(255 * RGB_image[:, :, 2])
+    # BRG_image[:, :, 1] = RGB_image[:, :, 1]#np.floor(255 * RGB_image[:, :, 1])
+    # BRG_image[:, :, 2] = RGB_image[:, :, 0]#np.floor(255 * RGB_image[:, :, 0])
+    #
+    # print("shape", BRG_image.shape,'\n')
+    return  cv2.cvtColor(RGB_image, cv2.COLOR_RGB2BGR )
 
 
 def create_logger(name, log_dir=None, debug=False):
