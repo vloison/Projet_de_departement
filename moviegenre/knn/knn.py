@@ -1,34 +1,14 @@
-from pathlib import Path
+import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
 import numpy as np
-import imageio
-from preprocessing import show_img, preprocess, MOVIES
 import matplotlib.pyplot as plt
 from tqdm import tqdm
-
-# CONSTANTS
-k = 3  # k of the k-NN : number of closest neigbors
-ind = 608  # indice of the poster to be treated in the original database
-training_size = 1000  # Size of the training set
-testing_size = 100   # Size of the testing set
-
-
-# LOAD DATA
-fileend  = '_tr='+str(training_size)+'_test='+str(testing_size)+'.npy'
-Xtr = np.load('./sets/Xtr'+fileend)
-print("Shape of Xtr:", Xtr.shape)
-Xtrprim = np.reshape(Xtr, (len(Xtr), 150*100*3))
-print("Shape of Xtrprim:", Xtrprim.shape)
-Ytr = np.load('./sets/Ytr'+fileend)
-print("Shape of Ytr", Ytr.shape)
-training_set = np.load('./sets/training_set'+fileend)
-testing_set = np.load('./sets/testing_set'+fileend)
 
 
 # KNN FUNCTION AND RESULTS
 
-def KNN(Xtr, Xtrprim, Ytr, training_set, ind, k, print_results=False):
-    """ Calculates the genre of movie of indice ind using a k-NN approach.
+def KNN(dataset, Xtr, Xtrprim, Ytr, training_set, Xtest, testing_set, ind, k, image_size, genres_dict, print_results=False):
+    """ Calculates the genre of movie of indice ind in the testing set using a k-NN approach.
     Xtr is the set of posters among which the closest neighbors will be found.
     Ytr stocks the genra of each poster of Xtr.
     training_set stocks the indice of each poster of Xtr in the original
@@ -38,39 +18,52 @@ def KNN(Xtr, Xtrprim, Ytr, training_set, ind, k, print_results=False):
     neigh = KNeighborsClassifier(n_neighbors=k)
     neigh.fit(Xtrprim, Ytr)
     # Preprocess the poster to be classified
-    path = Path('../posters/' + str(ind) + '.jpg')
-    x = preprocess(imageio.imread(path), (150, 100, 3))
+    x = Xtest[ind]
     if print_results:
+        print("Movie to be labellised:")
         plt.imshow(x)
         plt.show()
     # Classification
-    x = np.reshape(x, (150*100*3))
-    genre_ind = np.where(neigh.predict([x])[0] == 1)
-    genre = MOVIES.genre_1.unique()[genre_ind]
+    x = np.reshape(x, (image_size[0]*image_size[1]*image_size[2]))
+    
+    prediction = neigh.predict([x])
+    print('Prediction:', prediction)
+    #genre_ind = np.where(neigh.predict([x])[0] == 1)[0]
+    #print('genre_ind', genre_ind)
+    #genre = genres_dict[list(genre_ind)]
     # Print results
     if print_results:
-        print("Title of the movie:", MOVIES.at[ind, 'title'],
-              ", Label: ", MOVIES.at[ind, 'genre_1'])
-        print("Prediction for poster : ", genre)
+        titre = dataset.loc[dataset['allocine_id'] == testing_set[ind], ['title']].values[0]
+        print("Title of the movie:", titre)
+        print("Label: ", dataset.loc[dataset['allocine_id'] == testing_set[ind], ['genres']].values[0])
+        #print("Prediction for poster : ", genre_ind)
         # DIsplay neighbors
         neighbors = neigh.kneighbors([x], return_distance=False)
+        print("Closest neighbors:")
         for neighbor in neighbors[0]:
-            show_img(MOVIES, Xtr, Ytr, training_set, neighbor)
-    return genre
+            plt.imshow(Xtr[neighbor])
+            plt.show()
+            titre = dataset.loc[dataset['allocine_id'] == training_set[neighbor], ['title']].values[0]
+            label = dataset.loc[dataset['allocine_id'] == training_set[neighbor], ['genres']].values[0]
+            print("Title of the movie:", titre)
+            print("Label: ", label)
+    return prediction
 
 
-#KNN(Xtr, Xtrprim, Ytr, training_set, ind, k, print_results=True)
-
-
-def test_KNN(Xtr, Xtrprim, Ytr, training_set, testing_set, k):
-    error = 0
-    for i in tqdm(testing_set):
-        res = KNN(Xtr, Xtrprim, Ytr, training_set, i, k)
-        if res.size == 0 or res != MOVIES.at[i, 'genre_1']:
-            error += 1
-    error = error/len(testing_set)
-    return(error)
-
-
-print(test_KNN(Xtr, Xtrprim, Ytr, training_set, testing_set, k))
+def test_KNN(dataset, Xtr, Xtrprim, Ytr, training_set, Xtest, Ytest, testing_set, k, accuracy_funct, image_size, genres_dict):
+    # Initialize k-NN parameters
+    neigh = KNeighborsClassifier(n_neighbors=k)
+    neigh.fit(Xtrprim, Ytr)
+    
+    accuracy = 0
+    for i in tqdm(range(len(testing_set))):
+        # Compute x
+        x = Xtest[i]
+        x = np.reshape(x, (image_size[0]*image_size[1]*image_size[2]))
+        # Prediction
+        prediction = neigh.predict([x])
+        # Compute accuracy
+        accuracy += accuracy_funct(Ytest[i], prediction)
+    accuracy = accuracy/len(testing_set)
+    return(accuracy)
         
