@@ -3,7 +3,7 @@
 Split data into training set and testing set.
 """
 import numpy as np
-
+import pandas as pd
 
 def prepare_unif_sets(database, X, Y, IDS, GENRES_DICT, training_size, testing_size):
     print(X.shape, Y.shape, IDS.shape, len(GENRES_DICT), training_size, testing_size)
@@ -11,21 +11,30 @@ def prepare_unif_sets(database, X, Y, IDS, GENRES_DICT, training_size, testing_s
     IDStr = []
     IDStest = []
     restants = list(GENRES_DICT)
+    print('restants', restants)
     # On commence par créer les listes des indices des éléments des sets
+    #print(database['genres'])
 
     # Première boucle pour repérer les genres de cardinal non suffisant.
     # Pour chaque genre non suffisant, on met tous les films de ce genre dans
     # le training_set, sauf 1 qu'on met dans le testing_set
     for k in restants:
+        print(k)
         # Récupérer tous les films du genre concerné
-        tab_genre = database[database['genres'].str[0] == k]
+        tab_genre = database[database['genres'].astype(str).str.contains(k, case=False)]
         card_genre = tab_genre.shape[0]
         # Traitement du cas où le genre a un card non suffisant
         if card_genre < training_size/nb_genres:
             # Shuffle avant extraction
-            tab_genre = tab_genre.sample(n=card_genre)
-            IDStr += list(tab_genre[:card_genre-1].index)
-            IDStest += list(tab_genre[card_genre-1:].index)
+            print('card_genre', card_genre)
+            #tab_genre = tab_genre.sample(n=card_genre)
+            tab_train = tab_genre[:card_genre-1]
+            print(tab_train)
+            tab_test = tab_genre[card_genre-1:]
+            #print(tab_genre)
+            IDStr += tab_train.index.tolist()
+            print(IDStr)
+            IDStest += tab_test.index.tolist()
             restants.remove(k)
     # Deuxième boucle pour les genres de cardinal suffisant.
     # Si un genre n'a pas un cardinal suffisant par rapport à la nouvelle
@@ -33,7 +42,7 @@ def prepare_unif_sets(database, X, Y, IDS, GENRES_DICT, training_size, testing_s
     new_size = int((training_size - len(IDStr))/len(restants)) + 1
     for k in restants:
         print(k)
-        tab_genre = database[database['genres'].str[0] == k]
+        tab_genre = database[database['genres'].astype(str).str.contains(k, case=False)]
         card_genre = tab_genre.shape[0]
         if tab_genre.shape[0] < new_size:
             tab_genre = tab_genre.sample(n=card_genre)
