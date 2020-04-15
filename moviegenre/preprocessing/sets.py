@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# RENOMMER LE FICHIER!!!
 """Preprocesses the input data"""
 from pathlib import Path
 from skimage import transform
