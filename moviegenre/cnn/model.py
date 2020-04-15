@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Dense, Dropout, Flatten
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, BatchNormalization
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, BatchNormalization, GlobalAveragePooling2D, Dense
 from tensorflow.keras.optimizers import Adagrad
 from tensorflow.keras.metrics import categorical_accuracy
-
+from tensorflow.keras import Sequential
+from tensorflow.keras.applications import ResNet50
 
 def standard_layer(conv1_dim, conv2_dim, input):
     output = Conv2D(conv1_dim, kernel_size=(3, 3), activation="relu")(input)
@@ -37,3 +38,20 @@ def create_cnn_v1(nb_genres, size):
 
     return model
 
+
+def create_cnn_v2(nb_genres, size):
+    base_model = ResNet50(input_shape=size,
+                          include_top=False, 
+                          weights='imagenet')
+    base_model.trainable = False
+    model = Sequential([
+      base_model,
+      GlobalAveragePooling2D(),
+      Dense(nb_genres, activation="sigmoid")
+    ])
+    model.compile(
+        loss='categorical_crossentropy',
+        optimizer=Adagrad(),
+        metrics=['accuracy']
+    )
+    return model

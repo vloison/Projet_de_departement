@@ -75,7 +75,7 @@ def main(args):
         training_history = None
     else:
         model, training_history = train_model(
-            train_posters, train_genres, nb_genres, config['image_size'],
+            config['model_name'], train_posters, train_genres, nb_genres, config['image_size'],
             nb_epochs=config['nb_epochs'], batch_size=config['batch_size'],
             validation_split=config['validation_split'],
             verbose=args.verbose, logger=logger
