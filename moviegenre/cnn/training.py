@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 from cnn.model import create_cnn_v1, create_cnn_v2
+from cnn.resnet import create_resnet
 
 
 def train_model(
@@ -12,11 +13,11 @@ def train_model(
     if model_name == 'cnn_v1':
         model = create_cnn_v1(nb_genres, image_size)
     else:
-        model = create_cnn_v2(nb_genres, image_size)
+        model = create_resnet(nb_genres, image_size)
 
     training_history = model.fit(
         training_posters, training_genres,
         batch_size=batch_size, epochs=nb_epochs, validation_split=validation_split,
-        bose=verbose)
+        verbose=verbose)
 
     return model, training_history
