@@ -16,13 +16,14 @@ def main(args):
     config = yaml.safe_load(open(args.config, encoding='utf-8'))
     # Naming files
     nb_genres = len(config['genres'])
-    appendix_split = 's{}t{}_'.format(config['size_per_genre'],
-                                       config['testing_split']
-                                       )+triplet_to_str(config['image_size']) + '_' + str(nb_genres)
+    appendix_split = 's{}t{}_'.format(
+        config['size_per_genre'],
+        config['testing_split']
+        ) + triplet_to_str(config['image_size']) + '_' + str(nb_genres)
 
     model_name = config['model_name']+'_e{}b{}v{}_'.format(config['nb_epochs'], config['batch_size'], config['validation_split'])
     model_name += appendix_split
-    logger = None #create_logger(name=model_name, log_dir=Path(args.log_dir))
+    logger = None   # create_logger(name=model_name, log_dir=Path(args.log_dir))
     selection_name = args.csv+'clean_poster_data_'+str(nb_genres)+'.csv'
     model_name = args.models_dir + model_name + '.h5'
     appendix_split += '.npy'
@@ -42,22 +43,24 @@ def main(args):
     not_found = download_database(posters_path, clean_movies,
                                   verbose=args.verbose, logger=logger)
 
-
     data_name = [Path(prefix+appendix_split) for prefix in [args.sets_dir + 'xtr_',
                                                             args.sets_dir + 'ytr_',
                                                             args.sets_dir + 'idtr_',
                                                             args.sets_dir + 'xtest_',
                                                             args.sets_dir + 'ytest_',
                                                             args.sets_dir + 'idtest_']]
+
     if data_name[0].exists() and data_name[1].exists() and data_name[2].exists() and data_name[3].exists() and data_name[4].exists() and data_name[5].exists():
         if args.verbose:
             print('Training and testing sets alreadey made')
         train_posters, train_genres, train_ids = np.load(data_name[0]), np.load(data_name[1]), np.load(data_name[2])
         test_posters, test_genres, test_ids = np.load(data_name[3]), np.load(data_name[4]), np.load(data_name[5])
+
     else:
         train_posters, train_genres, train_ids, test_posters, test_genres, test_ids = preprocess_data(
             clean_movies, config['genres'], config['size_per_genre'], args.posters, config['image_size'],
-            config['seed'], testing_split=config['testing_split'], verbose=args.verbose, logger=logger)
+            config['seed'], testing_split=config['testing_split'], verbose=args.verbose, logger=logger
+        )
         if args.save:
             sets_path = Path(args.sets_dir)
             if not sets_path.exists():
@@ -68,6 +71,7 @@ def main(args):
             np.save(data_name[3], test_posters)
             np.save(data_name[4], test_genres)
             np.save(data_name[5], test_ids)
+
     if Path(model_name).exists():
         if args.verbose:
             print('Model already trained')

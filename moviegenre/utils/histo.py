@@ -5,6 +5,7 @@ from matplotlib import pyplot as plt
 from tqdm import tqdm
 import numpy as np
 
+
 def histo_RGB(img):
     """Computes color histogram of an image
 
@@ -27,6 +28,7 @@ def histo_RGB(img):
         histo[col] = cv2.calcHist([img],[i], None,[256],[0,1])
 
     return histo
+
 
 def show_histo(histo):
 

@@ -22,6 +22,7 @@ def list_to_date(l):
 def triplet_to_str(l):
     return '{}-{}-{}'.format(l[0], l[1], l[2])
 
+
 def numpy_image_to_cv2(RGB_image):
     """ As numpy uses RGB with pixel values in [0,1] and cv2 uses BRG with values in [0,256],
     this function converts a numpy image to a cv2 image
