@@ -7,6 +7,7 @@ from tensorflow.keras.metrics import categorical_accuracy
 from tensorflow.keras import Sequential
 from tensorflow.keras.applications import ResNet50
 
+
 def standard_layer(conv1_dim, conv2_dim, input):
     output = Conv2D(conv1_dim, kernel_size=(3, 3), activation="relu")(input)
     output = Conv2D(conv2_dim, kernel_size=(3, 3), activation="relu")(output)
