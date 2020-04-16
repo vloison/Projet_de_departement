@@ -19,6 +19,7 @@ def train_model(
         training_posters, training_genres,
         batch_size=batch_size, epochs=nb_epochs, validation_split=validation_split,
         class_weight=class_weights,
-        verbose=verbose)
+        verbose=verbose
+    )
 
     return model, training_history
