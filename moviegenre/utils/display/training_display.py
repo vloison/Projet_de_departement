@@ -12,8 +12,8 @@ def plot_loss(training_history):
 
 
 def plot_accuracy(training_history):
-    plt.plot(training_history.history['categorical_acc'])
-    plt.plot(training_history.history['val_categorical_acc'])
+    plt.plot(training_history.history['accuracy'])
+    plt.plot(training_history.history['val_accuracy'])
     plt.title('Model accuracy')
     plt.ylabel('Accuracy')
     plt.xlabel('Epoch')
