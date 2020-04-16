@@ -3,11 +3,13 @@ posters/
 **/__pycache__/
 .idea/
 venv/
+**/.directory
 
 data/all_clean_genres.npy
 data/all_clean_ids.npy
 data/all_clean_posters.npy
 data/sets/
+data/models/
 data/features
 data/preprocessed
 data/numpy_genres.npy

@@ -3,38 +3,22 @@ seed:
 genres:
     Action: 0
     Animation: 1
-    Aventure: 2
-    Biopic: 3
-    Comédie: 4
-    Comédie-dramatique: 5
-    Comédie-musicale: 6
-    Documentaire: 7
-    Drame: 8
-    Epouvante-horreur: 9
-    Fantastique: 10
-    Historique: 11
-    Policier: 12
-    Romance: 13
-    Science-fiction: 14
-    Thriller: 15
-    Western: 16
+    Comédie: 2
+    Comédie dramatique: 3
+    Documentaire: 4
+    Drame: 5
+    Thriller-Policier: 6
 image_size:
-    [150, 100, 3]
-first_date:
-    [2010, 1, 1]
-last_date:
-    [2020, 1, 1]
-split_method:
-    uniform
+    [100, 100, 3]
+testing_split:
+    0.15
+validation_split:
+    0.15
+size_per_genre:
+    700
 model_name:
-    cnn_v1
-training_size:
-    2000
-testing_size:
-    100
+    cnn_v2
 nb_epochs:
     5
 batch_size:
     16
-validation_split:
-    0.15
