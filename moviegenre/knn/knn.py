@@ -17,45 +17,66 @@ def KNN(dataset, Xtr, tr_features, Ytr, training_ids, Xtest, test_features, test
     # Create k-NN operator
     neigh = KNeighborsClassifier(n_neighbors=k)
     neigh.fit(tr_features, Ytr)
+    
+    # Si ind > 0,renvoyer la prédiction pour test_features[ind] et afficher ses plus proches voisins
+    if ind > 0:
     # Preprocess the poster to be classified
-    x = Xtest[ind]
-    if print_results:
-        print("Movie to be labellised:")
-        plt.imshow(x)
-        plt.show()
-    # Classification
-    x_feat = test_features[ind]
-    
-    
-    neighbors = neigh.kneighbors([x_feat], return_distance=False)
-    label_for_max = Ytr[neighbors]
-    label_for_max = np.sum(label_for_max, axis=1)
-    print('labels_for_max', label_for_max)
-    ind_genre = np.argmax(label_for_max)
-    prediction = np.zeros(7)
-    prediction[ind_genre] = 1 
-    print('Prediction:', prediction)
-    #genre_ind = np.where(neigh.predict([x])[0] == 1)[0]
-    #print('genre_ind', genre_ind)
-    #genre = genres_dict[list(genre_ind)]
-    # Print results
-    if print_results:
-        titre = dataset.loc[dataset['allocine_id'] == testing_ids[ind], ['title']].values[0]
-        print("Title of the movie:", titre)
-        print("Label: ", dataset.loc[dataset['allocine_id'] == testing_ids[ind], ['genre']].values[0])
-        #print("Prediction for poster : ", genre_ind)
-        # DIsplay neighbors
-        
-        
-        print("Closest neighbors:")
-        for neighbor in neighbors[0]:
-            plt.imshow(Xtr[neighbor])
+        x = Xtest[ind]
+        if print_results:
+            print("Movie to be labellised:")
+            plt.imshow(x)
             plt.show()
-            titre = dataset.loc[dataset['allocine_id'] == training_ids[neighbor], ['title']].values[0]
-            label = dataset.loc[dataset['allocine_id'] == training_ids[neighbor], ['genre']].values[0]
+        # Classification
+        x_feat = test_features[ind]
+        
+        neighbors = neigh.kneighbors([x_feat], return_distance=False)
+        label_for_max = Ytr[neighbors]
+        label_for_max = np.sum(label_for_max, axis=1)
+        print('labels_for_max', label_for_max)
+        ind_genre = np.argmax(label_for_max)
+        prediction = np.zeros(7)
+        prediction[ind_genre] = 1 
+        print('Prediction:', prediction)
+        #genre_ind = np.where(neigh.predict([x])[0] == 1)[0]
+        #print('genre_ind', genre_ind)
+        #genre = genres_dict[list(genre_ind)]
+        # Print results
+        if print_results:
+            titre = dataset.loc[dataset['allocine_id'] == testing_ids[ind], ['title']].values[0]
             print("Title of the movie:", titre)
-            print("Label: ", label)
-    return prediction
+            print("Label: ", dataset.loc[dataset['allocine_id'] == testing_ids[ind], ['genre']].values[0])
+            #print("Prediction for poster : ", genre_ind)
+            # DIsplay neighbors
+            
+            
+            print("Closest neighbors:")
+            for neighbor in neighbors[0]:
+                plt.imshow(Xtr[neighbor])
+                plt.show()
+                titre = dataset.loc[dataset['allocine_id'] == training_ids[neighbor], ['title']].values[0]
+                label = dataset.loc[dataset['allocine_id'] == training_ids[neighbor], ['genre']].values[0]
+                print("Title of the movie:", titre)
+                print("Label: ", label)
+        return prediction
+    
+    #Si ind = -1, renvoyer le vecteur des prédictions sur tout le testing set
+    if ind ==-1:
+        test_prediction = np.zeros((len(testing_ids), Ytr.shape[1]))
+        print(test_prediction)
+        for i in range(len(testing_ids)):
+            x_feat = test_features[i]
+        
+            neighbors = neigh.kneighbors([x_feat], return_distance=False)
+            label_for_max = Ytr[neighbors]
+            label_for_max = np.sum(label_for_max, axis=1)
+            #print('labels_for_max', label_for_max)
+            ind_genre = np.argmax(label_for_max)
+            test_prediction[i][ind_genre] = 1
+        
+        return(test_prediction)
+    
+    
+
 
 
 def test_KNN(dataset, Xtr, tr_features, Ytr, training_ids, Xtest, test_features, Ytest, testing_ids, k, accuracy_funct, image_size, genres_dict):
@@ -71,7 +92,7 @@ def test_KNN(dataset, Xtr, tr_features, Ytr, training_ids, Xtest, test_features,
         neighbors = neigh.kneighbors([x], return_distance=False)
         label_for_max = np.sum(Ytr[neighbors], axis=1)
         ind_genre = np.argmax(label_for_max)
-        prediction = np.zeros(7)
+        prediction = np.zeros(Ytr.shape[1])
         prediction[ind_genre] = 1 
         if np.argmax(prediction) == 0:
             indecis +=1

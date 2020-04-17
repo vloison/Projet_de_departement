@@ -45,9 +45,9 @@ print("Shape of YTEST", YTEST.shape)
 TRAINING_IDS = np.load('../data/sets/idtr' + fileend)
 TESTING_IDS = np.load('../data/sets/idtest'+fileend)
 
-k = 3
+k = 5
 ind = 26
-#KNN(MOVIES, XTR, TRAINING_FEATURES, YTR, TRAINING_IDS, XTEST, TESTING_FEATURES, TESTING_IDS, ind, k, IMAGE_SIZE, print_results=True)
+predictions_test = KNN(MOVIES, XTR, TRAINING_FEATURES, YTR, TRAINING_IDS, XTEST, TESTING_FEATURES, TESTING_IDS, -1, k, IMAGE_SIZE, print_results=True)
 
-print('accuracy', 
-         test_KNN(MOVIES, XTR, TRAINING_FEATURES, YTR, TRAINING_IDS, XTEST, TESTING_FEATURES, YTEST, TESTING_IDS, k, mono_label_KNN, IMAGE_SIZE, GENRES_DICT))
+#print('accuracy', 
+#         test_KNN(MOVIES, XTR, TRAINING_FEATURES, YTR, TRAINING_IDS, XTEST, TESTING_FEATURES, YTEST, TESTING_IDS, k, mono_label_KNN, IMAGE_SIZE, GENRES_DICT))
