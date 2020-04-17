@@ -10,10 +10,12 @@ data/all_clean_ids.npy
 data/all_clean_posters.npy
 data/sets/
 data/models/
-data/features
-data/preprocessed
+data/features/
 data/numpy_genres.npy
 data/numpy_ids.npy
 data/numpy_posters.npy
+
+local/
+moviegenre/brouillon.py
 
 logs/

@@ -7,16 +7,16 @@ from tqdm import tqdm
 
 # KNN FUNCTION AND RESULTS
 
-def KNN(dataset, Xtr, Xtrprim, Ytr, training_set, Xtest, testing_set, ind, k, image_size, genres_dict, print_results=False):
+def KNN(dataset, Xtr, tr_features, Ytr, training_ids, Xtest, test_features, testing_ids, ind, k, image_size, print_results=False):
     """ Calculates the genre of movie of indice ind in the testing set using a k-NN approach.
     Xtr is the set of posters among which the closest neighbors will be found.
     Ytr stocks the genra of each poster of Xtr.
-    training_set stocks the indice of each poster of Xtr in the original
+    training_ids stocks the indice of each poster of Xtr in the original
     database. """
 
     # Create k-NN operator
     neigh = KNeighborsClassifier(n_neighbors=k)
-    neigh.fit(Xtrprim, Ytr)
+    neigh.fit(tr_features, Ytr)
     # Preprocess the poster to be classified
     x = Xtest[ind]
     if print_results:
@@ -24,46 +24,60 @@ def KNN(dataset, Xtr, Xtrprim, Ytr, training_set, Xtest, testing_set, ind, k, im
         plt.imshow(x)
         plt.show()
     # Classification
-    x = np.reshape(x, (image_size[0]*image_size[1]*image_size[2]))
+    x_feat = test_features[ind]
     
-    prediction = neigh.predict([x])
+    
+    neighbors = neigh.kneighbors([x_feat], return_distance=False)
+    label_for_max = Ytr[neighbors]
+    label_for_max = np.sum(label_for_max, axis=1)
+    print('labels_for_max', label_for_max)
+    ind_genre = np.argmax(label_for_max)
+    prediction = np.zeros(7)
+    prediction[ind_genre] = 1 
     print('Prediction:', prediction)
     #genre_ind = np.where(neigh.predict([x])[0] == 1)[0]
     #print('genre_ind', genre_ind)
     #genre = genres_dict[list(genre_ind)]
     # Print results
     if print_results:
-        titre = dataset.loc[dataset['allocine_id'] == testing_set[ind], ['title']].values[0]
+        titre = dataset.loc[dataset['allocine_id'] == testing_ids[ind], ['title']].values[0]
         print("Title of the movie:", titre)
-        print("Label: ", dataset.loc[dataset['allocine_id'] == testing_set[ind], ['genres']].values[0])
+        print("Label: ", dataset.loc[dataset['allocine_id'] == testing_ids[ind], ['genre']].values[0])
         #print("Prediction for poster : ", genre_ind)
         # DIsplay neighbors
-        neighbors = neigh.kneighbors([x], return_distance=False)
+        
+        
         print("Closest neighbors:")
         for neighbor in neighbors[0]:
             plt.imshow(Xtr[neighbor])
             plt.show()
-            titre = dataset.loc[dataset['allocine_id'] == training_set[neighbor], ['title']].values[0]
-            label = dataset.loc[dataset['allocine_id'] == training_set[neighbor], ['genres']].values[0]
+            titre = dataset.loc[dataset['allocine_id'] == training_ids[neighbor], ['title']].values[0]
+            label = dataset.loc[dataset['allocine_id'] == training_ids[neighbor], ['genre']].values[0]
             print("Title of the movie:", titre)
             print("Label: ", label)
     return prediction
 
 
-def test_KNN(dataset, Xtr, Xtrprim, Ytr, training_set, Xtest, Ytest, testing_set, k, accuracy_funct, image_size, genres_dict):
+def test_KNN(dataset, Xtr, tr_features, Ytr, training_ids, Xtest, test_features, Ytest, testing_ids, k, accuracy_funct, image_size, genres_dict):
     # Initialize k-NN parameters
     neigh = KNeighborsClassifier(n_neighbors=k)
-    neigh.fit(Xtrprim, Ytr)
-    
+    neigh.fit(tr_features, Ytr)
+    indecis = 0
     accuracy = 0
-    for i in tqdm(range(len(testing_set))):
+    for i in tqdm(range(len(testing_ids))):
         # Compute x
-        x = Xtest[i]
-        x = np.reshape(x, (image_size[0]*image_size[1]*image_size[2]))
+        x = test_features[i]
         # Prediction
-        prediction = neigh.predict([x])
+        neighbors = neigh.kneighbors([x], return_distance=False)
+        label_for_max = np.sum(Ytr[neighbors], axis=1)
+        ind_genre = np.argmax(label_for_max)
+        prediction = np.zeros(7)
+        prediction[ind_genre] = 1 
+        if np.argmax(prediction) == 0:
+            indecis +=1
         # Compute accuracy
         accuracy += accuracy_funct(Ytest[i], prediction)
-    accuracy = accuracy/len(testing_set)
+    accuracy = accuracy/len(testing_ids)
+    print('Nombre de cas indécis', indecis)
     return(accuracy)
         

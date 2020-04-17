@@ -9,54 +9,45 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from knn.knn import KNN, test_KNN
-from utils.accuracy import multi_label
+from utils.accuracy import mono_label_KNN
 
 # Variables reloadées en attendant l'intégration à la pipeline
 
-training_size = 2000  # Size of the training set
-testing_size = 100   # Size of the testing set
-
-MOVIES = pd.read_csv('../data/2010-1-1_2020-1-1_17.csv')
+MOVIES = pd.read_csv('../data/clean_poster_data_7.csv')
 GENRES_DICT={'Action': 0,
  'Animation': 1, 
- 'Aventure': 2, 
- 'Biopic': 3, 
- 'Comédie': 4, 
- 'Comédie-dramatique': 5, 
- 'Comédie-musicale': 6, 
- 'Documentaire': 7,
- 'Drame': 8, 
- 'Epouvante-horreur': 9, 
- 'Fantastique': 10, 
- 'Historique': 11, 
- 'Policier': 12, 
- 'Romance': 13, 
- 'Science-fiction': 14, 
- 'Thriller': 15, 
- 'Western': 16}
-IMAGE_SIZE = [150, 100, 3]
-str_im_size = '150-100-3'
-begin_date = '2010-1-1'
-end_date = '2020-1-1'
-nb_genres = 17
+ 'Comédie': 2, 
+ 'Comédie-dramatique': 3,  
+ 'Documentaire': 4,
+ 'Drame': 5,      
+ 'Thriller': 6}
+IMAGE_SIZE = [100, 100, 3]
+
+nb_genres = 7
 
 # LOAD DATA
-fileend  = '_'+'tr'+str(training_size)+'t'+str(testing_size)+'_'+str_im_size+'_'+begin_date+'_'+end_date+'_'+str(nb_genres)+'.npy'
-Xtr = np.load('../data/splitted/xtr_uniform' + fileend)
-print("Shape of Xtr:", Xtr.shape)
-Xtest = np.load('../data/splitted/xtest_uniform' + fileend)
-print("Shape of Xtest:", Xtest.shape)
-Xtrprim = np.reshape(Xtr, (len(Xtr), 150*100*3))
-print("Shape of Xtrprim:", Xtrprim.shape)
-Ytr = np.load('../data/splitted/ytr_uniform' + fileend)
-print("Shape of Ytr", Ytr.shape)
-Ytest = np.load('../data/splitted/ytest_uniform' + fileend)
-print("Shape of Ytest", Ytest.shape)
-training_set = np.load('../data/splitted/idtr_uniform' + fileend)
-testing_set = np.load('../data/splitted/idtest_uniform'+fileend)
+fileend  = '_s700t0.15_100-100-3_7.npy'
+XTR = np.load('../data/sets/xtr' + fileend)
+print("Shape of XTR:", XTR.shape)
+XTEST = np.load('../data/sets/xtest' + fileend)
+print("Shape of XTEST:", XTEST.shape)
 
+TRAINING_FEATURES = np.reshape(XTR, (len(XTR), IMAGE_SIZE[0]*IMAGE_SIZE[1]*IMAGE_SIZE[2]))
+print("Shape of training features:", TRAINING_FEATURES.shape)
+TESTING_FEATURES = np.reshape(XTEST, (len(XTEST), IMAGE_SIZE[0]*IMAGE_SIZE[1]*IMAGE_SIZE[2]))
+print("Shape of testing features:", TESTING_FEATURES.shape)
 
-k=3
+YTR = np.load('../data/sets/ytr' + fileend)
+print("Shape of YTR", YTR.shape)
+YTEST = np.load('../data/sets/ytest' + fileend)
+print("Shape of YTEST", YTEST.shape)
+
+TRAINING_IDS = np.load('../data/sets/idtr' + fileend)
+TESTING_IDS = np.load('../data/sets/idtest'+fileend)
+
+k = 3
+ind = 26
+#KNN(MOVIES, XTR, TRAINING_FEATURES, YTR, TRAINING_IDS, XTEST, TESTING_FEATURES, TESTING_IDS, ind, k, IMAGE_SIZE, print_results=True)
 
 print('accuracy', 
-      test_KNN(MOVIES, Xtr, Xtrprim, Ytr, training_set, Xtest, Ytest, testing_set, k, multi_label, IMAGE_SIZE, GENRES_DICT))
+         test_KNN(MOVIES, XTR, TRAINING_FEATURES, YTR, TRAINING_IDS, XTEST, TESTING_FEATURES, YTEST, TESTING_IDS, k, mono_label_KNN, IMAGE_SIZE, GENRES_DICT))
