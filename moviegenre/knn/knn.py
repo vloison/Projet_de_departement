@@ -7,7 +7,7 @@ from tqdm import tqdm
 
 # KNN FUNCTION AND RESULTS
 
-def KNN(dataset, Xtr, tr_features, Ytr, training_ids, Xtest, test_features, testing_ids, ind, k, image_size, print_results=False):
+def KNN(dataset, Xtr, tr_features, Ytr, training_ids, Xtest, test_features, testing_ids, ind, k, print_results=False):
     """ Calculates the genre of movie of indice ind in the testing set using a k-NN approach.
     Xtr is the set of posters among which the closest neighbors will be found.
     Ytr stocks the genra of each poster of Xtr.
@@ -15,9 +15,10 @@ def KNN(dataset, Xtr, tr_features, Ytr, training_ids, Xtest, test_features, test
     database. """
 
     # Create k-NN operator
+    print('Generating kNN Classifier...')
     neigh = KNeighborsClassifier(n_neighbors=k)
     neigh.fit(tr_features, Ytr)
-    
+    print('kNN Classifier generated.')
     # Si ind > 0,renvoyer la prédiction pour test_features[ind] et afficher ses plus proches voisins
     if ind > 0:
     # Preprocess the poster to be classified
@@ -63,7 +64,7 @@ def KNN(dataset, Xtr, tr_features, Ytr, training_ids, Xtest, test_features, test
     if ind ==-1:
         test_prediction = np.zeros((len(testing_ids), Ytr.shape[1]))
         print(test_prediction)
-        for i in range(len(testing_ids)):
+        for i in tqdm(range(len(testing_ids))):
             x_feat = test_features[i]
         
             neighbors = neigh.kneighbors([x_feat], return_distance=False)
@@ -79,7 +80,7 @@ def KNN(dataset, Xtr, tr_features, Ytr, training_ids, Xtest, test_features, test
 
 
 
-def test_KNN(dataset, Xtr, tr_features, Ytr, training_ids, Xtest, test_features, Ytest, testing_ids, k, accuracy_funct, image_size, genres_dict):
+def test_KNN(dataset, Xtr, tr_features, Ytr, training_ids, Xtest, test_features, Ytest, testing_ids, k, accuracy_funct, genres_dict):
     # Initialize k-NN parameters
     neigh = KNeighborsClassifier(n_neighbors=k)
     neigh.fit(tr_features, Ytr)
