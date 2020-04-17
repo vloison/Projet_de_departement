@@ -63,7 +63,6 @@ def KNN(dataset, Xtr, tr_features, Ytr, training_ids, Xtest, test_features, test
     #Si ind = -1, renvoyer le vecteur des prédictions sur tout le testing set
     if ind ==-1:
         test_prediction = np.zeros((len(testing_ids), Ytr.shape[1]))
-        print(test_prediction)
         for i in tqdm(range(len(testing_ids))):
             x_feat = test_features[i]
         
