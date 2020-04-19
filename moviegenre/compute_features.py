@@ -1,7 +1,7 @@
 from pathlib import Path
 import argparse
 import yaml
-from utils.histo import histo_RGB, show_histo
+from utils.histo import histo_RGB, histo_LAB, show_histo_RGB
 from utils.misc import list_to_date, triplet_to_str, read_csv_with_genres, create_logger, numpy_image_to_cv2
 from tensorflow.keras.models import load_model
 import numpy as np
@@ -76,71 +76,108 @@ def main(args):
             np.save(data_name[4], test_genres)
             np.save(data_name[5], test_ids)
 
-    # Pour tester la conversion de numpy vers cv2
-    if False:
-        BRG_poster = numpy_image_to_cv2(train_posters[0])
-        cv2.imshow("test", BRG_poster)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+    histo_rgb_r_train = np.zeros((train_posters.shape[0], 256))
+    histo_rgb_g_train = np.zeros((train_posters.shape[0], 256))
+    histo_rgb_b_train = np.zeros((train_posters.shape[0], 256))
 
-
-    histo_r_train = np.zeros((train_posters.shape[0], 256))
-    histo_g_train = np.zeros((train_posters.shape[0], 256))
-    histo_b_train = np.zeros((train_posters.shape[0], 256))
+    histo_lab_l_train = np.zeros((train_posters.shape[0], 256))
+    histo_lab_a_train = np.zeros((train_posters.shape[0], 256))
+    histo_lab_b_train = np.zeros((train_posters.shape[0], 256))
 
     if args.verbose :
-        print("Computing the RGB histograms on the train set")
+        print("Computing the RGB and LAB histograms on the training set")
 
     for i, poster in tqdm(enumerate(train_posters)):
         BRG_poster = numpy_image_to_cv2(poster)
-        hist = histo_RGB(BRG_poster)
-        histo_r_train[i] = hist['r'][:, 0]
-        histo_g_train[i] = hist['g'][:, 0]
-        histo_b_train[i] = hist['b'][:, 0]
-#    print(histo_r_train, histo_g_train, histo_b_train)
 
-    histo_r_test = np.zeros((test_posters.shape[0], 256))
-    histo_g_test = np.zeros((test_posters.shape[0], 256))
-    histo_b_test = np.zeros((test_posters.shape[0], 256))
+        hist_rgb = histo_RGB(BRG_poster)
+        histo_rgb_r_train[i] = hist_rgb['r'][:, 0]
+        histo_rgb_g_train[i] = hist_rgb['g'][:, 0]
+        histo_rgb_b_train[i] = hist_rgb['b'][:, 0]
+
+        hist_lab = histo_LAB(BRG_poster)
+        histo_lab_l_train[i] = hist_lab['l'][:, 0]
+        histo_lab_a_train[i] = hist_lab['a'][:, 0]
+        histo_lab_b_train[i] = hist_lab['b'][:, 0]
+
+    histo_rgb_r_test = np.zeros((train_posters.shape[0], 256))
+    histo_rgb_g_test = np.zeros((train_posters.shape[0], 256))
+    histo_rgb_b_test = np.zeros((train_posters.shape[0], 256))
+
+    histo_lab_l_test = np.zeros((train_posters.shape[0], 256))
+    histo_lab_a_test = np.zeros((train_posters.shape[0], 256))
+    histo_lab_b_test = np.zeros((train_posters.shape[0], 256))
 
     if args.verbose :
-        print("Computing the RGB histograms on the train set")
+        print("Computing the RGB and LAB histograms on the testing set")
 
     for i, poster in tqdm(enumerate(test_posters)):
 
         BRG_poster = numpy_image_to_cv2(poster)
-        hist = histo_RGB(BRG_poster)
-        histo_r_test[i] = hist['r'][:, 0]
-        histo_g_test[i] = hist['g'][:, 0]
-        histo_b_test[i] = hist['b'][:, 0]
 
-    #pour tester
-    if False:
-        plt.imshow(train_posters[135])
+        hist_rgb = histo_RGB(BRG_poster)
+        histo_rgb_r_test[i] = hist_rgb['r'][:, 0]
+        histo_rgb_g_test[i] = hist_rgb['g'][:, 0]
+        histo_rgb_b_test[i] = hist_rgb['b'][:, 0]
+
+        hist_lab = histo_LAB(BRG_poster)
+        histo_lab_l_test[i] = hist_lab['l'][:, 0]
+        histo_lab_a_test[i] = hist_lab['a'][:, 0]
+        histo_lab_b_test[i] = hist_lab['b'][:, 0]
+
+    # pour tester
+    if args.tests:
+        print("Testing on the 125th image of the training set...")
+
+        plt.imshow(train_posters[124])
         plt.show()
         plt.close()
-        plt.plot(range(256), train_posters[135], 'r')
-        plt.plot(range(256), train_posters[135], 'g')
-        plt.plot(range(256), train_posters[135], 'b')
+
+        plt.plot(range(len(histo_lab_l_train[125])), histo_lab_l_train[124], 'black', label = 'lab_l')
+        plt.plot(range(len(histo_lab_a_train[125])), histo_lab_a_train[124], 'g', label = 'lab_a')
+        plt.plot(range(len(histo_lab_b_train[125])), histo_lab_b_train[124], 'b', label = 'lab_b')
+        plt.plot(range(len(histo_rgb_r_train[124])), histo_rgb_r_train[124], 'r', label='rgb_r')
+        plt.plot(range(len(histo_rgb_r_train[124])), histo_rgb_g_train[124], 'g', label='rgb_g')
+        plt.plot(range(len(histo_rgb_b_train[124])), histo_rgb_b_train[124], 'b', label='rgb_b')
+        plt.legend()
+        plt.grid(True)
         plt.show()
         plt.close()
 
-    features_name_train = [Path(prefix + 'train') for prefix in [args.features+'histo_r_',
-                                                                args.features+'histo_g_',
-                                                                args.features+'histo_b_']]
+        print("End of the test")
 
-    features_name_test = [Path(prefix + 'test') for prefix in [args.features+'histo_r_',
-                                                                args.features+'histo_g_',
-                                                                args.features+'histo_b_']]
+    features_name_rgb_train = [Path(prefix + 'train') for prefix in [args.features+'histo_rgb_r_',
+                                                                args.features+'histo_rgb_g_',
+                                                                args.features+'histo_rgb_b_']]
+
+    features_name_rgb_test = [Path(prefix + 'test') for prefix in [args.features+'histo_rgb_r_',
+                                                                args.features+'histo_rgb_g_',
+                                                                args.features+'histo_rgb_b_']]
+
+    features_name_lab_train = [Path(prefix + 'train') for prefix in [args.features+'histo_lab_l_',
+                                                                args.features+'histo_lab_a_',
+                                                                args.features+'histo_lab_b_']]
+
+    features_name_lab_test = [Path(prefix + 'test') for prefix in [args.features+'histo_lab_l_',
+                                                                args.features+'histo_lab_a_',
+                                                                args.features+'histo_lab_b_']]
 
     if args.save:
-        np.save(features_name_train[0], histo_r_train)
-        np.save(features_name_train[1], histo_g_train)
-        np.save(features_name_train[2], histo_b_train)
+        np.save(features_name_rgb_train[0], histo_rgb_r_train)
+        np.save(features_name_rgb_train[1], histo_rgb_r_train)
+        np.save(features_name_rgb_train[2], histo_rgb_r_train)
 
-        np.save(features_name_test[0], histo_r_test)
-        np.save(features_name_test[1], histo_g_test)
-        np.save(features_name_test[2], histo_b_test)
+        np.save(features_name_rgb_test[0], histo_rgb_r_test)
+        np.save(features_name_rgb_test[1], histo_rgb_g_test)
+        np.save(features_name_rgb_test[2], histo_rgb_b_test)
+
+        np.save(features_name_lab_train[0], histo_lab_l_train)
+        np.save(features_name_lab_train[1], histo_lab_a_train)
+        np.save(features_name_lab_train[2], histo_lab_b_train)
+
+        np.save(features_name_lab_test[0], histo_lab_l_test)
+        np.save(features_name_lab_test[1], histo_lab_a_test)
+        np.save(features_name_lab_test[2], histo_lab_b_test)
 
 if __name__ == '__main__':
 
@@ -157,5 +194,6 @@ if __name__ == '__main__':
 
     parser.add_argument('-s', '--save', help='Save model', action='store_true')
     parser.add_argument('-v', '--verbose', help='Verbose', action='store_true')
+    parser.add_argument('-t', '--tests', help='Verbose', action='store_true')
     args, _ = parser.parse_known_args()
     main(args)

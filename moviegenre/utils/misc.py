@@ -42,7 +42,7 @@ def numpy_image_to_cv2(RGB_image):
     # BRG_image[:, :, 2] = RGB_image[:, :, 0]#np.floor(255 * RGB_image[:, :, 0])
     #
     # print("shape", BRG_image.shape,'\n')
-    return  cv2.cvtColor((255*RGB_image).astype('uint8'), cv2.COLOR_RGB2BGR )
+    return  cv2.cvtColor((255 * RGB_image).astype('uint8'), cv2.COLOR_RGB2BGR )
 
 
 def create_logger(name, log_dir=None, debug=False):
