@@ -1,9 +1,9 @@
-## TO DO : pour le 23/03/2020
+## TO DO : pour le 27/04/2020
 
-- Forme finale de la BDD, training_set et testing_set finaux, passage en monolabel -> Maxime
-- Checker ResNet -> Alex
-- Features (Histogramme RGB, Histogramme LAB) : Nico
-- k-NN, checker la distance de transport optimal -> Vivi
+- Mtrices de confusion, F-score, intégration du k-NN dans la pipeline -> Maxime
+- Accès aux différences couches de ResNet, PCA -> Alex
+- Peaufiner les histograppes (distance, bins), et regarder les résultats du knn dessus : Nico
+- Intégrer le multiclasses au kNN, checker les résultats sur des images plus grandes -> Vivi
 
 ### Guidelines
 
@@ -18,5 +18,3 @@
 - Regarder ce qui se fait sur Google Cloud Platform : Utilisation boîte noire
 - Interprétabilité du résultat : éventuellement revisualiser les infos processées par le modèle. Auto-encodeurs ?
 - Couche linéaire + Softmax & Crossentropy -> Modèle linéaire interprétable.
-- Donner des représentations de ResNet en argument à un k-NN
-- Ajouter une couche de classifieur à la fin d'un ResNet déjà entraîné et entraîner uniquement le classifieur

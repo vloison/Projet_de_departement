@@ -75,9 +75,6 @@ def KNN(dataset, Xtr, tr_features, Ytr, training_ids, Xtest, test_features, test
         
         return(test_prediction)
     
-    
-
-
 
 def test_KNN(dataset, Xtr, tr_features, Ytr, training_ids, Xtest, test_features, Ytest, testing_ids, k, accuracy_funct, genres_dict):
     # Initialize k-NN parameters

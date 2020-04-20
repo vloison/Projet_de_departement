@@ -14,7 +14,7 @@ from utils.accuracy import mono_label_KNN
 # Variables reloadées en attendant l'intégration à la pipeline
 
 MOVIES = pd.read_csv('../data/clean_poster_data_7.csv')
-GENRES_DICT={'Action': 0,
+GENRES_DICT = {'Action': 0,
  'Animation': 1, 
  'Comédie': 2, 
  'Comédie-dramatique': 3,  
@@ -26,7 +26,7 @@ IMAGE_SIZE = [100, 100, 3]
 nb_genres = 7
 
 # LOAD DATA
-fileend  = '_s700t0.15_100-100-3_7.npy'
+fileend = '_s700t0.15_100-100-3_7.npy'
 XTR = np.load('../data/sets/xtr' + fileend)
 print("Shape of XTR:", XTR.shape)
 XTEST = np.load('../data/sets/xtest' + fileend)
@@ -47,7 +47,7 @@ TESTING_IDS = np.load('../data/sets/idtest'+fileend)
 
 k = 5
 ind = 26
-predictions_test = KNN(MOVIES, XTR, TRAINING_FEATURES, YTR, TRAINING_IDS, XTEST, TESTING_FEATURES, TESTING_IDS, -1, k, IMAGE_SIZE, print_results=True)
+#predictions_test = KNN(MOVIES, XTR, TRAINING_FEATURES, YTR, TRAINING_IDS, XTEST, TESTING_FEATURES, TESTING_IDS, -1, k, IMAGE_SIZE, print_results=True)
 
 #print('accuracy', 
 #         test_KNN(MOVIES, XTR, TRAINING_FEATURES, YTR, TRAINING_IDS, XTEST, TESTING_FEATURES, YTEST, TESTING_IDS, k, mono_label_KNN, IMAGE_SIZE, GENRES_DICT))

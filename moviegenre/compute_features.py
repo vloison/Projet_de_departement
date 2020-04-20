@@ -100,13 +100,13 @@ def main(args):
         histo_lab_a_train[i] = hist_lab['a'][:, 0]
         histo_lab_b_train[i] = hist_lab['b'][:, 0]
 
-    histo_rgb_r_test = np.zeros((train_posters.shape[0], args.bins))
-    histo_rgb_g_test = np.zeros((train_posters.shape[0], args.bins))
-    histo_rgb_b_test = np.zeros((train_posters.shape[0], args.bins))
+    histo_rgb_r_test = np.zeros((test_posters.shape[0], args.bins))
+    histo_rgb_g_test = np.zeros((test_posters.shape[0], args.bins))
+    histo_rgb_b_test = np.zeros((test_posters.shape[0], args.bins))
 
-    histo_lab_l_test = np.zeros((train_posters.shape[0], args.bins))
-    histo_lab_a_test = np.zeros((train_posters.shape[0], args.bins))
-    histo_lab_b_test = np.zeros((train_posters.shape[0], args.bins))
+    histo_lab_l_test = np.zeros((test_posters.shape[0], args.bins))
+    histo_lab_a_test = np.zeros((test_posters.shape[0], args.bins))
+    histo_lab_b_test = np.zeros((test_posters.shape[0], args.bins))
 
     if args.verbose :
         print("Computing the RGB and LAB histograms on the testing set")
