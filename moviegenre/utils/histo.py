@@ -6,13 +6,16 @@ from tqdm import tqdm
 import numpy as np
 
 
-def histo_RGB(img):
+def histo_RGB(img, bins=256):
     """Computes color histogram RGB of an image
 
     Parameters
     ----------
-    img : type
-        cv2 image
+    img : cv2 image
+        image to be treated
+
+    bins : positive int (default : 256)
+        number of bins of the histogram
 
     Returns
     -------
@@ -25,17 +28,21 @@ def histo_RGB(img):
     histo = {}
 
     for i, col in enumerate(color):
-        histo[col] = cv2.calcHist([img],[i], None, [256], [0,255])
+        histo[col] = cv2.calcHist([img],[i], None, [bins], [0,255])
+        print(len(histo[col]))
 
     return histo
 
-def histo_LAB(img):
+def histo_LAB(img, bins=256):
     """Computes color histogram LAB of an image
 
     Parameters
     ----------
-    img : type
-        cv2 image
+    img : cv2 image
+        image to be treated
+
+    bins : positive int (default : 256)
+        number of bins of the histogram
 
     Returns
     -------
@@ -50,14 +57,14 @@ def histo_LAB(img):
     histo = {}
 
     for i, col in enumerate(color):
-        histo[col] = cv2.calcHist([lab_img],[i], None, [256], [0,255])
+        histo[col] = cv2.calcHist([lab_img],[i], None, [bins], [0,255])
 
     return histo
 
 def show_histo_RGB(histo):
 
-    plt.plot(range(256), histo['r'], 'r')
-    plt.plot(range(256), histo['g'], 'g')
-    plt.plot(range(256), histo['b'], 'b')
+    plt.plot(range(len(histo['r'])), histo['r'], 'r')
+    plt.plot(range(len(histo['g'])), histo['g'], 'g')
+    plt.plot(range(len(histo['b'])), histo['b'], 'b')
     plt.grid(True)
     plt.show()

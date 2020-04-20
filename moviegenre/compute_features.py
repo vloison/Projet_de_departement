@@ -76,13 +76,13 @@ def main(args):
             np.save(data_name[4], test_genres)
             np.save(data_name[5], test_ids)
 
-    histo_rgb_r_train = np.zeros((train_posters.shape[0], 256))
-    histo_rgb_g_train = np.zeros((train_posters.shape[0], 256))
-    histo_rgb_b_train = np.zeros((train_posters.shape[0], 256))
+    histo_rgb_r_train = np.zeros((train_posters.shape[0], args.bins))
+    histo_rgb_g_train = np.zeros((train_posters.shape[0], args.bins))
+    histo_rgb_b_train = np.zeros((train_posters.shape[0], args.bins))
 
-    histo_lab_l_train = np.zeros((train_posters.shape[0], 256))
-    histo_lab_a_train = np.zeros((train_posters.shape[0], 256))
-    histo_lab_b_train = np.zeros((train_posters.shape[0], 256))
+    histo_lab_l_train = np.zeros((train_posters.shape[0], args.bins))
+    histo_lab_a_train = np.zeros((train_posters.shape[0], args.bins))
+    histo_lab_b_train = np.zeros((train_posters.shape[0], args.bins))
 
     if args.verbose :
         print("Computing the RGB and LAB histograms on the training set")
@@ -90,23 +90,23 @@ def main(args):
     for i, poster in tqdm(enumerate(train_posters)):
         BRG_poster = numpy_image_to_cv2(poster)
 
-        hist_rgb = histo_RGB(BRG_poster)
+        hist_rgb = histo_RGB(BRG_poster, bins=args.bins)
         histo_rgb_r_train[i] = hist_rgb['r'][:, 0]
         histo_rgb_g_train[i] = hist_rgb['g'][:, 0]
         histo_rgb_b_train[i] = hist_rgb['b'][:, 0]
 
-        hist_lab = histo_LAB(BRG_poster)
+        hist_lab = histo_LAB(BRG_poster, bins=args.bins)
         histo_lab_l_train[i] = hist_lab['l'][:, 0]
         histo_lab_a_train[i] = hist_lab['a'][:, 0]
         histo_lab_b_train[i] = hist_lab['b'][:, 0]
 
-    histo_rgb_r_test = np.zeros((train_posters.shape[0], 256))
-    histo_rgb_g_test = np.zeros((train_posters.shape[0], 256))
-    histo_rgb_b_test = np.zeros((train_posters.shape[0], 256))
+    histo_rgb_r_test = np.zeros((train_posters.shape[0], args.bins))
+    histo_rgb_g_test = np.zeros((train_posters.shape[0], args.bins))
+    histo_rgb_b_test = np.zeros((train_posters.shape[0], args.bins))
 
-    histo_lab_l_test = np.zeros((train_posters.shape[0], 256))
-    histo_lab_a_test = np.zeros((train_posters.shape[0], 256))
-    histo_lab_b_test = np.zeros((train_posters.shape[0], 256))
+    histo_lab_l_test = np.zeros((train_posters.shape[0], args.bins))
+    histo_lab_a_test = np.zeros((train_posters.shape[0], args.bins))
+    histo_lab_b_test = np.zeros((train_posters.shape[0], args.bins))
 
     if args.verbose :
         print("Computing the RGB and LAB histograms on the testing set")
@@ -115,12 +115,12 @@ def main(args):
 
         BRG_poster = numpy_image_to_cv2(poster)
 
-        hist_rgb = histo_RGB(BRG_poster)
+        hist_rgb = histo_RGB(BRG_poster, bins=args.bins)
         histo_rgb_r_test[i] = hist_rgb['r'][:, 0]
         histo_rgb_g_test[i] = hist_rgb['g'][:, 0]
         histo_rgb_b_test[i] = hist_rgb['b'][:, 0]
 
-        hist_lab = histo_LAB(BRG_poster)
+        hist_lab = histo_LAB(BRG_poster, bins=args.bins)
         histo_lab_l_test[i] = hist_lab['l'][:, 0]
         histo_lab_a_test[i] = hist_lab['a'][:, 0]
         histo_lab_b_test[i] = hist_lab['b'][:, 0]
@@ -133,9 +133,9 @@ def main(args):
         plt.show()
         plt.close()
 
-        plt.plot(range(len(histo_lab_l_train[125])), histo_lab_l_train[124], 'black', label = 'lab_l')
-        plt.plot(range(len(histo_lab_a_train[125])), histo_lab_a_train[124], 'g', label = 'lab_a')
-        plt.plot(range(len(histo_lab_b_train[125])), histo_lab_b_train[124], 'b', label = 'lab_b')
+        plt.plot(range(len(histo_lab_l_train[124])), histo_lab_l_train[124], 'black', label = 'lab_l')
+        plt.plot(range(len(histo_lab_a_train[124])), histo_lab_a_train[124], 'g', label = 'lab_a')
+        plt.plot(range(len(histo_lab_b_train[124])), histo_lab_b_train[124], 'b', label = 'lab_b')
         plt.plot(range(len(histo_rgb_r_train[124])), histo_rgb_r_train[124], 'r', label='rgb_r')
         plt.plot(range(len(histo_rgb_r_train[124])), histo_rgb_g_train[124], 'g', label='rgb_g')
         plt.plot(range(len(histo_rgb_b_train[124])), histo_rgb_b_train[124], 'b', label='rgb_b')
@@ -146,19 +146,19 @@ def main(args):
 
         print("End of the test")
 
-    features_name_rgb_train = [Path(prefix + 'train') for prefix in [args.features+'histo_rgb_r_',
+    features_name_rgb_train = [Path(prefix + 'train' + str(args.bins)) for prefix in [args.features+'histo_rgb_r_',
                                                                 args.features+'histo_rgb_g_',
                                                                 args.features+'histo_rgb_b_']]
 
-    features_name_rgb_test = [Path(prefix + 'test') for prefix in [args.features+'histo_rgb_r_',
+    features_name_rgb_test = [Path(prefix + 'test' + str(args.bins)) for prefix in [args.features+'histo_rgb_r_',
                                                                 args.features+'histo_rgb_g_',
                                                                 args.features+'histo_rgb_b_']]
 
-    features_name_lab_train = [Path(prefix + 'train') for prefix in [args.features+'histo_lab_l_',
+    features_name_lab_train = [Path(prefix + 'train' + str(args.bins)) for prefix in [args.features+'histo_lab_l_',
                                                                 args.features+'histo_lab_a_',
                                                                 args.features+'histo_lab_b_']]
 
-    features_name_lab_test = [Path(prefix + 'test') for prefix in [args.features+'histo_lab_l_',
+    features_name_lab_test = [Path(prefix + 'test' + str(args.bins)) for prefix in [args.features+'histo_lab_l_',
                                                                 args.features+'histo_lab_a_',
                                                                 args.features+'histo_lab_b_']]
 
@@ -190,6 +190,7 @@ if __name__ == '__main__':
     parser.add_argument('--csv', help='Path to the clean csv', default='../data/')
     parser.add_argument('--sets-dir', help='Path to the training and testing sets', default='../data/sets/')
     # je rajoute un argument pour la direction des features
+    parser.add_argument('--bins', help='Number of bins in the histogram', type=int, default=256)
     parser.add_argument('--features', help='Path to the clean csv', default='../data/features/')
 
     parser.add_argument('-s', '--save', help='Save model', action='store_true')
