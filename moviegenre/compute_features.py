@@ -146,19 +146,19 @@ def main(args):
 
         print("End of the test")
 
-    features_name_rgb_train = [Path(prefix + 'train' + str(args.bins)) for prefix in [args.features+'histo_rgb_r_',
+    features_name_rgb_train = [Path(prefix + 'train_' + str(args.bins)) for prefix in [args.features+'histo_rgb_r_',
                                                                 args.features+'histo_rgb_g_',
                                                                 args.features+'histo_rgb_b_']]
 
-    features_name_rgb_test = [Path(prefix + 'test' + str(args.bins)) for prefix in [args.features+'histo_rgb_r_',
+    features_name_rgb_test = [Path(prefix + 'test_' + str(args.bins)) for prefix in [args.features+'histo_rgb_r_',
                                                                 args.features+'histo_rgb_g_',
                                                                 args.features+'histo_rgb_b_']]
 
-    features_name_lab_train = [Path(prefix + 'train' + str(args.bins)) for prefix in [args.features+'histo_lab_l_',
+    features_name_lab_train = [Path(prefix + 'train_' + str(args.bins)) for prefix in [args.features+'histo_lab_l_',
                                                                 args.features+'histo_lab_a_',
                                                                 args.features+'histo_lab_b_']]
 
-    features_name_lab_test = [Path(prefix + 'test' + str(args.bins)) for prefix in [args.features+'histo_lab_l_',
+    features_name_lab_test = [Path(prefix + 'test_' + str(args.bins)) for prefix in [args.features+'histo_lab_l_',
                                                                 args.features+'histo_lab_a_',
                                                                 args.features+'histo_lab_b_']]
 

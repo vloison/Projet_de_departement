@@ -29,7 +29,6 @@ def histo_RGB(img, bins=256):
 
     for i, col in enumerate(color):
         histo[col] = cv2.calcHist([img],[i], None, [bins], [0,255])
-        print(len(histo[col]))
 
     return histo
 
