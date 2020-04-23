@@ -76,7 +76,7 @@ class Observations():
         Parameters
         ----------
         features_list : np.array,
-            vecteur colonne qui contient la feature pour chaque poster (une ligne = un poster, une colonne)
+            vecteur colonne qui contient la feature pour chaque poster (une ligne = un poster)
 
         """
         if self.n_observations == 0:
@@ -88,12 +88,15 @@ class Observations():
         self.features_type['float'].append(self.observations.shape[1] - 1)
 
     def compute_distance(self):
+        """calcule la distance qui permet de comparer deux observations en tenant
+        compte des features histogrammes, de la distance entre histogrammes, mais aussi des features float
+        la distance est ensuite répertoriée dans l'attribut distance
+
+        """
         def aux(x1, x2):
 
             res = 0
             for begin, end in self.features_type['histo'] :
-                #print(x1.type(), x2.type())
-                #print(self.observations.shape)
                 res += cv2.compareHist(x1[begin:end].astype('float32'), x2[begin:end].astype('float32'), self.histo_dist)
 
 
