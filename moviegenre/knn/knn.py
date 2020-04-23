@@ -10,8 +10,42 @@ import cv2
 #     return dico_train, dico_test
 
 class Observations():
+    """ Classe qui permet de gérer les observations (une observation = un poster)
+    et notamment de concilier les features qui sont de l'ordre des floats et celles qui sont des histogrammes
+
+    Parameters
+    ----------
+    histo_dist : int
+        distance utilisée pour les histogrammes l'entier renvoie à la méthode utilisée par la fonction cv2. compareHist
+            - 1 -> distance du chi2 : CV_COMP_CHISQR
+            - 3 -> distance de Bhattacharyya : CV_COMP_BHATTACHARYYA
+
+    Attributes
+    ----------
+    n_observations : type
+        nombre d'observations
+    observations : type
+        matrice répertoriant les données des observations (une ligne=une observation)
+    distance : type
+        fonction qui permet de calculer la distance entre 2 observations en prenant compte de la distance entre les histogrammes, de la position des histogrammes ...
+    features_type : type
+        dictionnaire qui répertorie la position des features qui correspondent à histogrammes dans les observations (en effet toutes les observations sont concaténées horizontalement)
+        sous la forme de tuples (début, fin) et qui répertorie aussi les emplacementsdes features qui sont de simples float.
+    histo_dist : int
+        cf au dessus
+    """
 
     def __init__(self, histo_dist):
+        """initialisation de la classe
+
+        Parameters
+        ----------
+        histo_dist : int
+            distance utilisée pour les histogrammes l'entier renvoie à la méthode utilisée par la fonction cv2. compareHist
+            - 1 -> distance du chi2 : CV_COMP_CHISQR
+            - 3 -> distance de Bhattacharyya : CV_COMP_BHATTACHARYYA
+
+        """
         self.n_observations = 0
         self.observations = None
         self.distance = None
@@ -19,6 +53,14 @@ class Observations():
         self.histo_dist = histo_dist
 
     def add_histo_feature(self, features_matrix):
+        """Permet d'ajouter une features de type histogramme aux observations
+
+        Parameters
+        ----------
+        features_matrix : np.array
+            matrice qui contient les histogrammes pour chaque poster (une ligne = un poster, une colonne = une bin)
+
+        """
 
         if self.n_observations == 0:
             self.n_observations = features_matrix.shape[0]
@@ -29,7 +71,14 @@ class Observations():
         self.features_type['histo'].append( (self.observations.shape[1] - features_matrix.shape[1], self.observations.shape[1]) )
 
     def add_float_feature(self, features_list):
+        """Permet d'ajouter une features de type histogramme aux observations
 
+        Parameters
+        ----------
+        features_list : np.array,
+            vecteur colonne qui contient la feature pour chaque poster (une ligne = un poster, une colonne)
+
+        """
         if self.n_observations == 0:
             self.n_observations = len(features_list)
             self.observations = np.array(features_list).reshape(self.n_observations, 1)
