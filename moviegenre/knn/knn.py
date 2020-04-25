@@ -71,7 +71,7 @@ class Observations():
         self.features_type['histo'].append( (self.observations.shape[1] - features_matrix.shape[1], self.observations.shape[1]) )
 
     def add_float_feature(self, features_list):
-        """Permet d'ajouter une features de type histogramme aux observations
+        """Permet d'ajouter une features de type float aux observations
 
         Parameters
         ----------
@@ -86,6 +86,23 @@ class Observations():
         self.observations = np.concatenate((self.observations, np.array(features_list).reshape(self.n_observations, 1)), axis=1)
 
         self.features_type['float'].append(self.observations.shape[1] - 1)
+
+    def add_float_features(self, features_array):
+        """Permet d'ajouter plusieurs features de type float d'un seul coup aux observations
+
+        Parameters
+        ----------
+        features_array : np.array,
+            matrice qui contient les feature pour chaque poster (une ligne = un poster, une colonne = une feature)
+
+        """
+        if self.n_observations == 0:
+            self.n_observations = len(features_list)
+            self.observations = features_array
+
+        self.features_type['float'] = self.features_type['float'] + [len(self.observations) + i for i in range(len(features_array))]
+
+        self.observations = np.concatenate((self.observations, np.array(features_list)), axis=1)
 
     def compute_distance(self):
         """calcule la distance qui permet de comparer deux observations en tenant
