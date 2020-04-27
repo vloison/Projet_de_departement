@@ -14,8 +14,9 @@ import matplotlib.pyplot as plt
 import cv2
 import pandas as pd
 
+
 def main(args):
-    #J'ai repris la base du début du main pour pouvoir le réintégrer si besoin
+    # J'ai repris la base du début du main pour pouvoir le réintégrer si besoin
     config = yaml.safe_load(open(args.config, encoding='utf-8'))
     # Naming files
     nb_genres = len(config['genres'])
@@ -30,7 +31,6 @@ def main(args):
     selection_name = args.csv+'clean_poster_data_'+str(nb_genres)+'.csv'
     model_name = args.models_dir + model_name + '.h5'
     appendix_split += '.npy'
-
 
     if Path(selection_name).exists():
         if args.verbose:
@@ -179,6 +179,7 @@ def main(args):
         np.save(features_name_lab_test[1], histo_lab_a_test)
         np.save(features_name_lab_test[2], histo_lab_b_test)
 
+
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
@@ -196,5 +197,6 @@ if __name__ == '__main__':
     parser.add_argument('-s', '--save', help='Save model', action='store_true')
     parser.add_argument('-v', '--verbose', help='Verbose', action='store_true')
     parser.add_argument('-t', '--tests', help='Verbose', action='store_true')
-    args, _ = parser.parse_known_args()
+    str_args = '-v -s'.split()
+    args, _ = parser.parse_known_args(str_args)
     main(args)
