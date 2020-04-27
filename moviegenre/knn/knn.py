@@ -9,7 +9,8 @@ import cv2
 # def dico_features(histo_type):
 #     return dico_train, dico_test
 
-class Observations():
+
+class Observations:
     """ Classe qui permet de gérer les observations (une observation = un poster)
     et notamment de concilier les features qui sont de l'ordre des floats et celles qui sont des histogrammes
 
@@ -49,7 +50,7 @@ class Observations():
         self.n_observations = 0
         self.observations = None
         self.distance = None
-        self.features_type = {'histo' : [], 'float' : [] }
+        self.features_type = {'histo': [], 'float': []}
         self.histo_dist = histo_dist
 
     def add_histo_feature(self, features_matrix):
@@ -68,7 +69,7 @@ class Observations():
 
         self.observations = np.concatenate((self.observations, features_matrix), axis=1)
 
-        self.features_type['histo'].append( (self.observations.shape[1] - features_matrix.shape[1], self.observations.shape[1]) )
+        self.features_type['histo'].append((self.observations.shape[1] - features_matrix.shape[1], self.observations.shape[1]))
 
     def add_float_feature(self, features_list):
         """Permet d'ajouter une features de type histogramme aux observations
@@ -96,22 +97,21 @@ class Observations():
         def aux(x1, x2):
 
             res = 0
-            for begin, end in self.features_type['histo'] :
+            for begin, end in self.features_type['histo']:
                 res += cv2.compareHist(x1[begin:end].astype('float32'), x2[begin:end].astype('float32'), self.histo_dist)
 
-
-            for ind in self.features_type['float'] :
+            for ind in self.features_type['float']:
                 res += np.abs(x1[ind] - x2[ind])
 
             return res
 
-        self.observations =self.observations.astype(float)
-        self.distance = lambda x1, x2 : aux(x1, x2)
+        self.observations = self.observations.astype(float)
+        self.distance = lambda x1, x2: aux(x1, x2)
 
 
 # KNN FUNCTION AND RESULTS
 
-def KNN(dataset, Xtr, tr_features, Ytr, training_ids, Xtest, test_features, testing_ids, ind, k, metric, print_results=False):
+def KNN(dataset, Xtr, tr_features, Ytr, training_ids, Xtest, test_features, testing_ids, ind, k, metric=None, print_results=False):
     """Calculates the genre of movie of indice ind in the testing set using a k-NN approach.
 
     Parameters
@@ -150,7 +150,11 @@ def KNN(dataset, Xtr, tr_features, Ytr, training_ids, Xtest, test_features, test
 
     # Create k-NN operator
     print('Generating kNN Classifier...')
-    neigh = KNeighborsClassifier(n_neighbors=k, metric=metric)
+    if metric is not None:
+        neigh = KNeighborsClassifier(n_neighbors=k, metric=metric)
+    else:
+        neigh = KNeighborsClassifier(n_neighbors=k)
+
     neigh.fit(tr_features, Ytr)
     print('kNN Classifier generated.')
     # Si ind > 0,renvoyer la prédiction pour test_features[ind] et afficher ses plus proches voisins
