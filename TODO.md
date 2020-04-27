@@ -1,9 +1,9 @@
 ## TO DO : pour le 27/04/2020
 
-- Mtrices de confusion, F-score, intégration du k-NN dans la pipeline -> Maxime
+- Matrices de confusion, F-score, '(sklearn, seaborn) -> Vivi
 - Accès aux différences couches de ResNet, PCA -> Alex
-- Peaufiner les histograppes (distance, bins), et regarder les résultats du knn dessus : Nico
-- Intégrer le multiclasses au kNN, checker les résultats sur des images plus grandes -> Vivi
+- Visualisation des résultats sur les histogrammes, XGBoost : Nico
+- Centralisation du code, débug -> Maxime
 
 ### Guidelines
 
