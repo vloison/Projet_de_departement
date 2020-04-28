@@ -4,7 +4,7 @@ import logging
 import os
 import numpy as np
 import cv2
-
+from pathlib import Path
 
 def read_csv_with_genres(file_name):
     def aux(string):
@@ -23,17 +23,16 @@ def triplet_to_str(l):
     return '{}-{}-{}'.format(l[0], l[1], l[2])
 
 
-
 def parse_model_name(name):
+    name = Path(name).name
     splitted = name.split(sep='_')
     splitted[3] = splitted[3].split(sep='-')
     b_index = splitted[1].rfind('b')
     v_index = splitted[1].rfind('v')
     t_index = splitted[2].rfind('t')
-
     return {
         'nn_version': splitted[0],
-        'image_size': splitted[3],
+        'image_size': [int(k) for k in splitted[3]],
         'nb_genres': splitted[4],
         'nb_epochs': int(splitted[1][1:b_index]),
         'batch_size': int(splitted[1][b_index+1:v_index]),
