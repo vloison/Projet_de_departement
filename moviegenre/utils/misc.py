@@ -24,6 +24,7 @@ def triplet_to_str(l):
 
 
 def parse_model_name(name):
+    models_dir = Path(name).parent
     name = Path(name).name
     splitted = name.split(sep='_')
     splitted[3] = splitted[3].split(sep='-')
@@ -31,6 +32,7 @@ def parse_model_name(name):
     v_index = splitted[1].rfind('v')
     t_index = splitted[2].rfind('t')
     return {
+        'models_dir': models_dir,
         'nn_version': splitted[0],
         'image_size': [int(k) for k in splitted[3]],
         'nb_genres': splitted[4],

@@ -18,7 +18,7 @@ size_per_genre:
     700
 nn_version: # Ne pas mettre de '_'
     # Si vaut onlyresnet: va charger le ResNet50V2 de keras
-    customresnet
+    transfer
 nb_epochs:
     5
 batch_size:

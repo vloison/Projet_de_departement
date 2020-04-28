@@ -3,10 +3,10 @@ from pathlib import Path
 from cnn.model import create_cnn, create_resnet
 from utils.misc import parse_model_name
 from tensorflow import keras
-
+import pandas as pd
 
 def train_model(
-        version, training_posters, training_genres,
+        version, train_posters, train_genres,
         nb_genres, image_size,
         nb_epochs, batch_size, validation_split,
         verbose=True):
@@ -19,9 +19,8 @@ def train_model(
             print('Using transfer learning on ResNet50V2')
         model = create_resnet(nb_genres, image_size)
 
-    print(batch_size, nb_epochs, validation_split, nb_genres, image_size)
     training_history = model.fit(
-        training_posters, training_genres,
+        x=train_posters, y=train_genres,
         batch_size=batch_size, epochs=nb_epochs, validation_split=validation_split,
         verbose=verbose)
 
@@ -29,13 +28,13 @@ def train_model(
 
 
 
-def get_trained_model(model_name, train_genres=None, train_posters=None, save_model=True, verbose=True):
+def get_trained_model(model_name, train_posters=None, train_genres=None, save_model=True, verbose=True):
     config = parse_model_name(model_name)
     if config['nn_version'] == 'onlyresnet':
         if verbose:
             print('Loading keras ResNet50V2')
         return keras.applications.resnet_v2.ResNet50V2(
-    input_tensor=config['image_size'], include_top=False, weights="imagenet"), None
+    input_shape=config['image_size'], include_top=False, weights="imagenet"), None
 
 
     if Path(model_name+'.h5').exists():
@@ -56,9 +55,8 @@ def get_trained_model(model_name, train_genres=None, train_posters=None, save_mo
         validation_split=config['validation_split'],
         verbose=verbose)
     if save_model:
-        models_path = Path(config['models_dir'])
-        if not models_path.exists():
-            models_path.mkdir()
+        if not config['models_dir'].exists():
+            config['models_dir'].mkdir()
         model.save(str(Path(model_name+'.h5')))
         hist_df = pd.DataFrame(training_history.history)
         hist_df.to_csv(str(Path('history_'+model_name+'.csv')))
