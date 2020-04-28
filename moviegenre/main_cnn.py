@@ -25,7 +25,7 @@ def main(args):
     model_name += appendix_split
     logger = None   # create_logger(name=model_name, log_dir=Path(args.log_dir))
     selection_name = args.csv+'clean_poster_data_'+str(nb_genres)+'.csv'
-    model_name = args.models_dir + model_name + '.h5'
+    model_name = args.models_dir + model_name
     appendix_split += '.npy'
 
     if Path(selection_name).exists():
@@ -72,10 +72,11 @@ def main(args):
             np.save(data_name[4], test_genres)
             np.save(data_name[5], test_ids)
 
-    if Path(model_name).exists():
+    if Path(model_name+'.h5').exists():
         if args.verbose:
             print('Model already trained')
-        model = load_model(str(Path(model_name)))
+        model = load_model(str(Path(model_name+'.h5')))
+        # training_history = pd.read_csv(Path('history_'+model_name+'.csv'))
         training_history = None
     else:
         model, training_history = train_model(
@@ -88,7 +89,10 @@ def main(args):
             models_path = Path(args.models_dir)
             if not models_path.exists():
                 models_path.mkdir()
-            model.save(str(Path(model_name)))
+            model.save(str(Path(model_name+'.h5')))
+            hist_df = pd.DataFrame(training_history.history)
+            hist_df.to_csv(str(Path('history_'+model_name+'.csv')))
+
     predicted_genres = model.predict(test_posters)
     print(mono_label(test_genres, predicted_genres, logger=logger))
     return clean_movies, model, train_posters, train_genres, train_ids, test_posters, test_genres, test_ids, clean_movies, predicted_genres, training_history
