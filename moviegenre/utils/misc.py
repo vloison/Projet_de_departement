@@ -23,6 +23,24 @@ def triplet_to_str(l):
     return '{}-{}-{}'.format(l[0], l[1], l[2])
 
 
+
+def parse_model_name(name):
+    splitted = name.split(sep='_')
+    splitted[3] = splitted[3].split(sep='-')
+    b_index = splitted[1].rfind('b')
+    v_index = splitted[1].rfind('v')
+    t_index = splitted[2].rfind('t')
+
+    return {
+        'nn_version': splitted[0],
+        'image_size': splitted[3],
+        'nb_genres': splitted[4],
+        'nb_epochs': int(splitted[1][1:b_index]),
+        'batch_size': int(splitted[1][b_index+1:v_index]),
+        'validation_split': float(splitted[1][v_index+1:])
+    }
+
+
 def numpy_image_to_cv2(RGB_image):
     """ As numpy uses RGB with pixel values in [0,1] and cv2 uses BRG with values in [0,256],
     this function converts a numpy image to a cv2 image
@@ -45,27 +63,4 @@ def numpy_image_to_cv2(RGB_image):
     return  cv2.cvtColor((255 * RGB_image).astype('uint8'), cv2.COLOR_RGB2BGR )
 
 
-def create_logger(name, log_dir=None, debug=False):
-    """Create a logger.
-    Create a logger that logs to log_dir.
-    Args:
-        name: str. Name of the logger.
-        log_dir: str. Path to log directory.
-        debug: bool. Whether to set debug level logging.
-    Returns:
-        logging.logger.
-    """
 
-    if log_dir and not os.path.exists(log_dir):
-        os.makedirs(log_dir)
-    log_format = '%(asctime)s %(process)d [%(levelname)s] %(message)s'
-    logging.basicConfig(level=logging.DEBUG if debug else logging.INFO,
-                        format=log_format)
-    logger = logging.getLogger(name)
-    if log_dir:
-        log_file = os.path.join(log_dir, '{}.txt'.format(name))
-        file_hdl = logging.FileHandler(log_file)
-        formatter = logging.Formatter(fmt=log_format)
-        file_hdl.setFormatter(formatter)
-        logger.addHandler(file_hdl)
-    return logger

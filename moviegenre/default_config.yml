@@ -16,8 +16,8 @@ validation_split:
     0.15
 size_per_genre:
     700
-model_name:
-    cnn_v2
+nn_version:
+    cnn2
 nb_epochs:
     5
 batch_size:
