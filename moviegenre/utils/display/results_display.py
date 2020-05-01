@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
+from matplotlib import cm 
 
 
 def show_img(dataset, posters, labels, ids, index):
@@ -29,8 +31,8 @@ def plot_image(img, ground_truth_array, class_names, predictions_array, in_test=
 
         plt.xlabel("{} {:2.0f}% \n({})".format(class_names[predicted_label],
             100*np.max(predictions_array),
-            class_names[true_label]),
-            color=color) 
+            'L:'+class_names[true_label]),
+            color=color)
     else:
         if predicted_label == true_label:
             color = 'blue'
@@ -64,11 +66,12 @@ def plot_test_results(test_posters, test_genres, class_names, predicted_genres, 
     plt.tight_layout()
 
 
-def plot_neighbors(test_posters, test_genres, class_names, predicted_genres, starting_index, num_images, train_posters, train_genres, neighbors):
-    
+def plot_neighbors(test_posters, test_genres, class_names, predicted_genres, starting_index, num_images, train_posters, train_genres, neighbors, method_for_title):
+
     k = len(neighbors[0])
     num_images = min(num_images, len(test_posters)-starting_index)
     plt.figure(figsize=(2 * (k+1), 2 * num_images))
+    plt.title('Plus proches voisins après '+method_for_title)
     ind = 0
     for i in range(starting_index, starting_index+num_images):
         ind += 1
@@ -120,11 +123,41 @@ def histogram(test_genres, predicted_genres, kneighbors, genres, save=False):
     accuracy /= len(test_genres)
 
     # Visualisation:
-    genres_list = list(config['genres'])
+    genres_list = list(genres)
     for iterateur in genres_list:
         plt.figure(figsize=(15, 5))
-        plt.title('Prédictions sur les films de genre ' + iterateur + ' k='+str(k) +", Accuracy totale:" + str(accuracy))
+        plt.title('Prédictions sur les films de genre ' + iterateur + ' kneighbors='+str(kneighbors) +", Accuracy totale:" + str(accuracy))
         plt.bar(genres_list, results_per_genre[iterateur].values())
         plt.show()
         if save:
             plt.savefig('../results/Resnet+kNN/'+iterateur+'_k='+str(kneighbors)+'.png')
+
+
+def ConfusionMatrix_display(test_genres, predicted_genres, genres, method_for_title):
+    """ Returns and displays the confusion matrix between test_genres and 
+    predicted_genres. 
+    genres is the dictionnary of genres used. 
+    method_for_title is a string whhich explains the classifier used to build
+    predicted_genres.    
+    """
+    genres_list = list(genres)
+    print(genres_list)
+    # COnvert predictions to strings
+    genres_inv = {genres[k]: k for k in genres.keys()}
+    predictions = np.array([genres_inv[k] for k in np.argmax(predicted_genres, axis=1)])
+    ground_truth = np.array([genres_inv[k] for k in np.argmax(test_genres, axis=1)])
+    conf_matrix = confusion_matrix(ground_truth, predictions, labels=genres_list, normalize='true')
+    disp = ConfusionMatrixDisplay(confusion_matrix=conf_matrix, display_labels=genres_list)
+    
+    disp.plot(cmap=cm.coolwarm_r, xticks_rotation='vertical')
+    plt.title('Matrice de confusion, '+ method_for_title)
+    return(conf_matrix)
+#    
+#truth= np.array([[1, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]])
+#labels = np.array([[0, 1, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]])
+#genres = {'Un' : 0, 
+#          'Deux' : 1, 
+#          'Trois' : 2}
+#
+#ConfusionMatrix_display(truth, labels, genres, 'titre')
+

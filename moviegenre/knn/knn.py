@@ -24,6 +24,8 @@ class KNN(KNeighborsClassifier):
             predicted_genres[i][ind_genre] = 1
         self.neighbors = np.array(self.neighbors)
         self.neighbors = self.neighbors[:,0,:]
+        if self.verbose:
+            print('Prediction done')
         return predicted_genres    
 
 
