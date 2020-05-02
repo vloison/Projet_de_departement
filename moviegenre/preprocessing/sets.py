@@ -46,7 +46,7 @@ def int_to_cat_vect(n, size):
 
 def preprocess_data(movies, genres_dict, size_per_genre,  posters_path,
                     image_size, seed, testing_split=0.15,
-                    verbose=True, logger=None):
+                    verbose=True):
     """Generates the data to be used by the models"""
     nb_genres = len(genres_dict)
     posters_path = Path(posters_path)

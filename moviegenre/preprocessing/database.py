@@ -71,13 +71,11 @@ def clean_database(movies_path, keep=['Action', 'Drame', 'Comédie dramatique',
     return movies
 
 
-def download_database(path, dataset, nb=None, verbose=True, logger=None):
+def download_database(path, dataset, nb=None, verbose=True):
     """Downloads the database from the given links in the dataset"""
     not_found = []
     if verbose:
         print('Posters database downloading')
-    if logger is not None:
-        logger.info('Posters database downloading')
     generator = dataset.iterrows() if nb is None else dataset.head(
         n=nb).iterrows()
     if verbose:
@@ -92,11 +90,7 @@ def download_database(path, dataset, nb=None, verbose=True, logger=None):
         except Exception as e:
             if verbose:
                 print('Error {} with film {}'.format(e, index))
-            if logger is not None:
-                logger.warning('Error {} with film {}'.format(e, index))
             not_found.append(index)
     if verbose:
         print('Database downloaded')
-    if logger is not None:
-        logger.info('Database downloaded')
     return not_found
