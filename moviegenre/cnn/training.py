@@ -27,15 +27,22 @@ def train_model(
     return model, training_history
 
 
-
 def get_trained_model(model_name, train_posters=None, train_genres=None, save_model=True, verbose=True):
     config = parse_model_name(model_name)
     if config['nn_version'] == 'onlyresnet':
         if verbose:
             print('Loading keras ResNet50V2')
-        return keras.applications.resnet_v2.ResNet50V2(
-    input_shape=config['image_size'], include_top=False, weights="imagenet"), None
 
+        nb_removed_layers = 1
+
+        resnet = keras.applications.resnet_v2.ResNet50V2(
+            input_shape=config['image_size'], include_top=False, weights="imagenet"
+        )
+
+        return keras.models.Model(
+            inputs=resnet.input,
+            outputs=resnet.layers[: -(nb_removed_layers - 1)]
+        ), None
 
     if Path(model_name+'.h5').exists():
         if verbose:
@@ -47,7 +54,6 @@ def get_trained_model(model_name, train_posters=None, train_genres=None, save_mo
                 print('No training history')
                 training_history = None
         return keras.models.load_model(str(Path(model_name+'.h5'))), training_history
-
 
     model, training_history = train_model(
         config['nn_version'], train_posters, train_genres, config['nb_genres'], config['image_size'],
