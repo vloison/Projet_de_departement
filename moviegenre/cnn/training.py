@@ -36,12 +36,12 @@ def get_trained_model(model_name, train_posters=None, train_genres=None, save_mo
         nb_removed_layers = 1
 
         resnet = keras.applications.resnet_v2.ResNet50V2(
-            input_shape=config['image_size'], include_top=True, weights="imagenet"
+            input_shape=config['image_size'], include_top=False, weights="imagenet"
         )
 
         return keras.models.Model(
             inputs=resnet.input,
-            outputs=resnet.layers[: -nb_removed_layers]
+            outputs=resnet.layers[:len(resnet.layers)-(nb_removed_layers - 1)]
         ), None
 
     if Path(model_name+'.h5').exists():
