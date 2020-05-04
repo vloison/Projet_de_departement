@@ -41,7 +41,7 @@ def get_trained_model(model_name, train_posters=None, train_genres=None, save_mo
 
         return keras.models.Model(
             inputs=resnet.input,
-            outputs=resnet.layers[:len(resnet.layers)-(nb_removed_layers - 1)]
+            outputs=resnet.layers[-nb_removed_layers].output
         ), None
 
     if Path(model_name+'.h5').exists():
