@@ -14,7 +14,7 @@ def show_img(dataset, posters, labels, ids, index):
     plt.show()
 
 
-def plot_image(img, ground_truth_array, class_names, predictions_array, in_test=True):
+def plot_image(img, ground_truth_array, class_names, predictions_array, in_test=True, distance=0):
     plt.grid(False)
     plt.xticks([])
     plt.yticks([])
@@ -29,7 +29,7 @@ def plot_image(img, ground_truth_array, class_names, predictions_array, in_test=
         else:
             color = 'red'
 
-        plt.xlabel("{} {:2.0f}% \n({})".format(class_names[predicted_label],
+        plt.xlabel("Préd:{} {:2.0f}% \n({})".format(class_names[predicted_label],
             100*np.max(predictions_array),
             'L:'+class_names[true_label]),
             color=color)
@@ -38,7 +38,7 @@ def plot_image(img, ground_truth_array, class_names, predictions_array, in_test=
             color = 'blue'
         else:
             color = 'black'
-        plt.xlabel(class_names[true_label], color=color)
+        plt.xlabel("{} \n Distance:{}".format(class_names[true_label], distance), color=color)
 
 def plot_value_array(ground_truth_array, predictions_array):
     plt.grid(False)
@@ -66,22 +66,32 @@ def plot_test_results(test_posters, test_genres, class_names, predicted_genres, 
     plt.tight_layout()
 
 
-def plot_neighbors(test_posters, test_genres, class_names, predicted_genres, starting_index, num_images, train_posters, train_genres, neighbors, method_for_title):
-
+def plot_neighbors(test_posters, test_genres, class_names, predicted_genres, starting_index, num_images, train_posters, train_genres, neighbors, distances, method_for_title):
+    """Affiche num_images posters et leurs plus proches voisins.
+    Les posters sont choisis à partir de l'index starting_index de test_posters
+    neighbors est un vecteur : neighbors[i] contient les indexes dans
+    training_set des plus proches voisins   de test_posters[i].
+    distances contient les distances des plus proches voisins, dans le même
+    format que neighbors.
+    test_genres est les labels des éléments du testing_set.
+    predicted_genres est les genres prédits du testing_set par le knn.
+    """
     k = len(neighbors[0])
     num_images = min(num_images, len(test_posters)-starting_index)
     plt.figure(figsize=(2 * (k+1), 2 * num_images))
     plt.title('Plus proches voisins après '+method_for_title)
+    
     ind = 0
     for i in range(starting_index, starting_index+num_images):
         ind += 1
         plt.subplot(num_images, k+1, ind)
+        # Affichage du poster test
         plot_image(test_posters[i], test_genres[i], class_names, predicted_genres[i])
+        # Affichage de ses plus proches voisins
         for n_neighbor in range(k):
             ind += 1
             plt.subplot(num_images, k+1, ind)
-            plot_image(train_posters[neighbors[i, n_neighbor]], train_genres[neighbors[i, n_neighbor]], class_names, test_genres[i], in_test=False)
-
+            plot_image(train_posters[neighbors[i, n_neighbor]], train_genres[neighbors[i, n_neighbor]], class_names, test_genres[i], in_test=False, distance=int(distances[i, n_neighbor]))
     plt.tight_layout()
 
 
@@ -152,12 +162,5 @@ def ConfusionMatrix_display(test_genres, predicted_genres, genres, method_for_ti
     disp.plot(cmap=cm.coolwarm_r, xticks_rotation='vertical')
     plt.title('Matrice de confusion, '+ method_for_title)
     return(conf_matrix)
-#    
-#truth= np.array([[1, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]])
-#labels = np.array([[0, 1, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]])
-#genres = {'Un' : 0, 
-#          'Deux' : 1, 
-#          'Trois' : 2}
-#
-#ConfusionMatrix_display(truth, labels, genres, 'titre')
+
 
