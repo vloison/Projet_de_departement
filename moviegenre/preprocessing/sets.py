@@ -96,3 +96,4 @@ def preprocess_data(movies, genres_dict, size_per_genre,  posters_path,
     test_genres = np.delete(test_genres, to_delete, 0)
     test_ids = np.delete(test_ids, to_delete)
     return train_posters, train_genres, train_ids, test_posters, test_genres, test_ids
+
