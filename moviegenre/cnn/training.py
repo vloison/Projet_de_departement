@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import tensorflow.keras as keras
 from pathlib import Path
 from cnn.model import create_cnn, create_resnet
 from utils.misc import parse_model_name
@@ -39,10 +40,17 @@ def get_trained_model(model_name, train_posters=None, train_genres=None, save_mo
             input_shape=config['image_size'], include_top=False, weights="imagenet"
         )
 
-        return keras.models.Model(
+        resnet = keras.models.Model(
             inputs=resnet.input,
             outputs=resnet.layers[-nb_removed_layers].output
-        ), None
+        )
+
+        model = keras.models.Sequential([
+            resnet,
+            keras.layers.GlobalAveragePooling2D()
+        ])
+
+        return model, None
 
     if Path(model_name+'.h5').exists():
         if verbose:
