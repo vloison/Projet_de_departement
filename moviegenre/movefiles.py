@@ -1,8 +1,8 @@
 import pathlib
 import pandas as pd
 
-source = pathlib.Path('../data2/posters')
-df = pd.read_csv('movefiles.csv')
+source = pathlib.Path('../data/posters')
+movefiles = pd.read_csv('movefiles.csv')
 
 for cat in movefiles.category.unique():
     p = source/cat
@@ -14,7 +14,7 @@ for cat in movefiles.category.unique():
 p = source/'autres'
 p.mkdir()
 
-for i, row in df.iterrows():
+for i, row in movefiles.iterrows():
     s = source/row['name']
     if s.exists():
         s.replace(source/row['category']/row['genre']/row['name'])
