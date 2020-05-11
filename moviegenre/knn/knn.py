@@ -23,7 +23,8 @@ class KNN(KNeighborsClassifier):
             self.neighbors.append(neighbors)
             self.distances.append(distances)
             # Traitement pour la prédiction 
-            label_for_max = train_genres[neighbors] / distances
+            label_for_max = train_genres[neighbors]
+            #label_for_max /= distances[:, :, np.newaxis]
             label_for_max = np.sum(label_for_max, axis=1)
             ind_genre = np.argmax(label_for_max)
             predicted_genres[i][ind_genre] = 1
