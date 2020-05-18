@@ -3,7 +3,6 @@ import pandas as pd
 import logging
 import os
 import numpy as np
-import cv2
 from pathlib import Path
 
 def read_csv_with_genres(file_name):
