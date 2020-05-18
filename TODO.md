@@ -1,9 +1,9 @@
-## TO DO : pour le 27/04/2020
+## TO DO : pour le 18/05/2020
 
-- Matrices de confusion, F-score, '(sklearn, seaborn) -> Vivi
-- Accès aux différences couches de ResNet, PCA -> Alex
-- Visualisation des résultats sur les histogrammes, XGBoost : Nico
-- Centralisation du code, débug -> Maxime
+- Rédaction kNN -> Vivi
+- Rédaction CNN et Transfer Learning -> Alex
+- Rédaction intro, lexique et XGBoost : Nico
+- Test de méthodes et visus -> Maxime
 
 ### Guidelines
 
