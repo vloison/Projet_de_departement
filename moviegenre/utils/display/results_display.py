@@ -91,7 +91,7 @@ def plot_neighbors(test_posters, test_genres, class_names, predicted_genres, sta
         for n_neighbor in range(k):
             ind += 1
             plt.subplot(num_images, k+1, ind)
-            plot_image(train_posters[neighbors[i, n_neighbor]], train_genres[neighbors[i, n_neighbor]], class_names, test_genres[i], in_test=False, distance=int(distances[i, n_neighbor]))
+            plot_image(train_posters[neighbors[i, n_neighbor]], train_genres[neighbors[i, n_neighbor]], class_names, test_genres[i], in_test=False, distance=str(distances[i, n_neighbor])[:5])
     plt.tight_layout()
 
 

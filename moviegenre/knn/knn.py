@@ -24,10 +24,10 @@ class KNN(KNeighborsClassifier):
             self.distances.append(distances)
             # Traitement pour la prédiction 
             label_for_max = train_genres[neighbors]
-            #label_for_max /= distances[:, :, np.newaxis]
             label_for_max = np.sum(label_for_max, axis=1)
             ind_genre = np.argmax(label_for_max)
             predicted_genres[i][ind_genre] = 1
+            
         # Mise à jour de self.neighbors et self.distances pour visu
         self.neighbors = np.array(self.neighbors)
         self.neighbors = self.neighbors[:, 0, :]
@@ -37,6 +37,7 @@ class KNN(KNeighborsClassifier):
         if self.verbose:
             print('Prediction done')
         return predicted_genres
+
     
 
 # Redéfinition de mono_label pour visu_acc_knn
@@ -50,16 +51,16 @@ def visu_acc_knn(list_k, train_features, train_genres, test_features, test_genre
     """ Fonction qui renvoie un graphe de l'accuracy d'un k-NN,avec k qui varie
     entraîné sur train_features, train_genres,
     et testé sur test_features, test_genres"""
-    accuracies = [1, 1]
+    accuracies = []
     for k in tqdm(list_k):
         knn = KNN(k)
-        knn.fit(test_features, test_genres)
-        pred = knn.predict(test_features, test_genres)
+        knn.fit(train_features, train_genres)
+        pred = knn.predict(test_features, train_genres)
         accuracies.append(mono_label(test_genres, pred))
     plt.plot(list_k, [0.14 for k in list_k], '--', label='Accuracy du hasard')
     plt.plot(list_k, accuracies, label='Accuracy des k-NN')
     plt.title('Accuracies des kNN sur posters bruts')
     plt.legend(loc='best')
-    plt.axis([min(list_k), max(list_k), 0, 1.5])
+    plt.axis([min(list_k), max(list_k), 0, 1])
     plt.show()
 
