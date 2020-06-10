@@ -40,37 +40,37 @@ def main(args):
     not_found = download_database(posters_path, clean_movies,
                                   verbose=args.verbose)
 
-    data_name = [Path(prefix + appendix_split) for prefix in [args.sets_dir + 'xtr_',
-                                                              args.sets_dir + 'ytr_',
-                                                              args.sets_dir + 'idtr_',
-                                                              args.sets_dir + 'xtest_',
-                                                              args.sets_dir + 'ytest_',
-                                                              args.sets_dir + 'idtest_']]
+#     data_name = [Path(prefix + appendix_split) for prefix in [args.sets_dir + 'xtr_',
+#                                                               args.sets_dir + 'ytr_',
+#                                                               args.sets_dir + 'idtr_',
+#                                                               args.sets_dir + 'xtest_',
+#                                                               args.sets_dir + 'ytest_',
+#                                                               args.sets_dir + 'idtest_']]
 
-    if data_name[0].exists() and data_name[1].exists() and data_name[2].exists() and data_name[3].exists() and data_name[4].exists() and data_name[5].exists():
-        if args.verbose:
-            print('Training and testing sets already made')
-        train_posters, train_genres, train_ids = np.load(
-            data_name[0]), np.load(data_name[1]), np.load(data_name[2])
-        test_posters, test_genres, test_ids = np.load(
-            data_name[3]), np.load(data_name[4]), np.load(data_name[5])
+#     if data_name[0].exists() and data_name[1].exists() and data_name[2].exists() and data_name[3].exists() and data_name[4].exists() and data_name[5].exists():
+#         if args.verbose:
+#             print('Training and testing sets already made')
+#         train_posters, train_genres, train_ids = np.load(
+#             data_name[0]), np.load(data_name[1]), np.load(data_name[2])
+#         test_posters, test_genres, test_ids = np.load(
+#             data_name[3]), np.load(data_name[4]), np.load(data_name[5])
 
-    else:
-        train_posters, train_genres, train_ids, test_posters, test_genres, test_ids = preprocess_data(
-            clean_movies, config['genres'], config['size_per_genre'], args.posters, config['image_size'],
-            config['seed'], testing_split=config['testing_split'], verbose=args.verbose)
-        if args.save:
-            sets_path = Path(args.sets_dir)
-            if not sets_path.exists():
-                sets_path.mkdir()
-            np.save(data_name[0], train_posters)
-            np.save(data_name[1], train_genres)
-            np.save(data_name[2], train_ids)
-            np.save(data_name[3], test_posters)
-            np.save(data_name[4], test_genres)
-            np.save(data_name[5], test_ids)
+#     else:
+#         train_posters, train_genres, train_ids, test_posters, test_genres, test_ids = preprocess_data(
+#             clean_movies, config['genres'], config['size_per_genre'], args.posters, config['image_size'],
+#             config['seed'], testing_split=config['testing_split'], verbose=args.verbose)
+#         if args.save:
+#             sets_path = Path(args.sets_dir)
+#             if not sets_path.exists():
+#                 sets_path.mkdir()
+#             np.save(data_name[0], train_posters)
+#             np.save(data_name[1], train_genres)
+#             np.save(data_name[2], train_ids)
+#             np.save(data_name[3], test_posters)
+#             np.save(data_name[4], test_genres)
+#             np.save(data_name[5], test_ids)
 
-    return clean_movies, train_posters, train_genres, train_ids, test_posters, test_genres, test_ids, model_name, args.save, args.verbose
+#     return clean_movies, train_posters, train_genres, train_ids, test_posters, test_genres, test_ids, model_name, args.save, args.verbose
 
 
 if __name__ == '__main__':
