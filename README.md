@@ -11,7 +11,7 @@ Dans le cadre de notre projet de département IMI, nous avons travaillé avec Wa
 
 
 # Structure du projet
-_data_: contient les posters, les fichiers .csv et les modèles sauvegardés. Le modèle final est *final_model.h5*.
+- _data_: contient les posters, les fichiers .csv et les modèles sauvegardés. Le modèle final est *final_model.h5*.
 - _moviegenre_: contient les fichiers python et les notebooks.
     * *transfer_learning.ipynb*: permet l'entraînement du réseau à base de transfer learning, et visualisation des résultats.
     * *resnet_knn.ipynb*: construit le modèle resnet + knn, visualisation des résultats. Vieux preprocessing
