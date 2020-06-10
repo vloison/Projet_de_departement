@@ -24,7 +24,7 @@ _data_: contient les posters, les fichiers .csv et les modèles sauvegardés. Le
     * *knn*: implémentation du KNN.
     * *preprocessing*: permet de nettoyer la base de données, de télécharger les posters. Permet aussi de faire le vieux preprocessing.
     * *utils*: contient des fonctions diverses, notamment de visualisation. Tout n'est pas à jour ou utile, certaines fonctions des notebooks pourraient se trouver dans ce dossier.
-- _results_: contient les visualisation de nos résultats
+- _results_: contient les visualisation de nos résultats. Ceux dans _transfer_ sont à jour, pas forcément le cas dans les autres dossiers.
 - _ressources_: contient les ressources de départ et notre premier draft.
 
 
